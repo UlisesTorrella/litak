@@ -31,7 +31,7 @@ object BuildSettings {
   lazy val defaultLibs: Seq[ModuleID] =
     akka.bundle ++ macwire.bundle ++ Seq(
       play.api,
-      chess,
+      //chess,
       scalalib,
       jodaTime,
       autoconfig

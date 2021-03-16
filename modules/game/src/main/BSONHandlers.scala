@@ -9,7 +9,6 @@ import chess.{
   Black,
   Status,
   Mode,
-  UnmovedRooks,
   History => ChessHistory,
   Game => ChessGame
 }
@@ -33,11 +32,6 @@ object BSONHandlers {
     x => BSONInteger(x.id)
   )
 
-  implicit private[game] val unmovedRooksHandler = tryHandler[UnmovedRooks](
-    { case bin: BSONBinary => ByteArrayBSONHandler.readTry(bin) map BinaryFormat.unmovedRooks.read },
-    x => ByteArrayBSONHandler.writeTry(BinaryFormat.unmovedRooks write x).get
-  )
-
   implicit private[game] val crazyhouseDataBSONHandler = new BSON[Crazyhouse.Data] {
 
     import Crazyhouse._
@@ -52,8 +46,7 @@ object BSONHandlers {
             white = Pocket(white.map(_.role)),
             black = Pocket(black.map(_.role))
           )
-        },
-        promoted = r.str("t").view.flatMap(chess.Pos.piotr).to(Set)
+        }
       )
 
     def writes(w: BSON.Writer, o: Crazyhouse.Data) =
@@ -61,8 +54,7 @@ object BSONHandlers {
         "p" -> {
           o.pockets.white.roles.map(_.forsythUpper).mkString +
             o.pockets.black.roles.map(_.forsyth).mkString
-        },
-        "t" -> o.promoted.map(_.piotr).mkString
+        }
       )
   }
 
@@ -94,9 +86,7 @@ object BSONHandlers {
           pgnMoves = pgnMoves,
           pieces = BinaryFormat.piece.read(r bytes F.binaryPieces, gameVariant),
           positionHashes = r.getO[chess.PositionHash](F.positionHashes) | Array.empty,
-          unmovedRooks = r.getO[UnmovedRooks](F.unmovedRooks) | UnmovedRooks.default,
           lastMove = clm.lastMove,
-          castles = clm.castles,
           halfMoveClock = pgnMoves.reverse.indexWhere(san =>
             san.contains("x") || san.headOption.exists(_.isLower)
           ) atLeast 0
@@ -108,10 +98,8 @@ object BSONHandlers {
             pieces = decoded.pieces,
             history = ChessHistory(
               lastMove = decoded.lastMove,
-              castles = decoded.castles,
               halfMoveClock = decoded.halfMoveClock,
               positionHashes = decoded.positionHashes,
-              unmovedRooks = decoded.unmovedRooks,
               checkCount = if (gameVariant.threeCheck) {
                 val counts = r.intsD(F.checkCount)
                 CheckCount(~counts.headOption, ~counts.lastOption)
@@ -210,7 +198,6 @@ object BSONHandlers {
             F.oldPgn         -> f.encode(o.pgnMoves take Game.maxPlies),
             F.binaryPieces   -> BinaryFormat.piece.write(o.board.pieces),
             F.positionHashes -> o.history.positionHashes,
-            F.unmovedRooks   -> o.history.unmovedRooks,
             F.castleLastMove -> CastleLastMove.castleLastMoveBSONHandler
               .writeTry(
                 CastleLastMove(

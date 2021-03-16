@@ -25,26 +25,32 @@ final private class Player(
       pov: Pov
   )(implicit proxy: GameProxy): Fu[Events] =
     play match {
-      case HumanPlay(_, uci, blur, lag, _) =>
+      case HumanPlay(_, uci, blur, lag, _) =>{
+        logger.info(s"NO ULISES")
         pov match {
           case Pov(game, _) if game.turns > Game.maxPlies =>
             round ! TooManyPlies
             fuccess(Nil)
-          case Pov(game, color) if game playableBy color =>
+          case Pov(game, color) if game playableBy color =>{
+            logger.info(s"YES ULISES")
             applyUci(game, uci, blur, lag)
               .leftMap(e => s"$pov $e")
               .fold(errs => fufail(ClientError(errs)), fuccess)
               .flatMap {
                 case Flagged => finisher.outOfTime(game)
-                case MoveApplied(progress, moveOrDrop) =>
-                  proxy.save(progress) >>
-                    postHumanOrBotPlay(round, pov, progress, moveOrDrop)
+                case MoveApplied(progress, moveOrDrop) =>{
+                    logger.warn(s"Player moved applied ULISES")
+                    proxy.save(progress) >>
+                      postHumanOrBotPlay(round, pov, progress, moveOrDrop)
+                  }
               }
+            }
           case Pov(game, _) if game.finished           => fufail(ClientError(s"$pov game is finished"))
           case Pov(game, _) if game.aborted            => fufail(ClientError(s"$pov game is aborted"))
           case Pov(game, color) if !game.turnOf(color) => fufail(ClientError(s"$pov not your turn"))
           case _                                       => fufail(ClientError(s"$pov move refused for some reason"))
         }
+      }
     }
 
   private[round] def bot(uci: Uci, round: RoundDuct)(pov: Pov)(implicit proxy: GameProxy): Fu[Events] =
@@ -72,6 +78,7 @@ final private class Player(
       progress: Progress,
       moveOrDrop: MoveOrDrop
   )(implicit proxy: GameProxy): Fu[Events] = {
+    logger.warn(s"Player posthuman play ULISES")
     if (pov.game.hasAi) uciMemo.add(pov.game, moveOrDrop)
     notifyMove(moveOrDrop, progress.game)
     if (progress.game.finished) moveFinish(progress.game) dmap { progress.events ::: _ }
@@ -79,9 +86,6 @@ final private class Player(
       if (progress.game.playableByAi) requestFishnet(progress.game, round)
       if (pov.opponent.isOfferingDraw) round ! DrawNo(PlayerId(pov.player.id))
       if (pov.player.isProposingTakeback) round ! TakebackNo(PlayerId(pov.player.id))
-      if (progress.game.forecastable) moveOrDrop.left.toOption.foreach { move =>
-        round ! ForecastPlay(move)
-      }
       scheduleExpiration(progress.game)
       fuccess(progress.events)
     }
@@ -129,17 +133,26 @@ final private class Player(
         game.chess(orig, dest, prom, metrics) map { case (ncg, move) =>
           ncg -> (Left(move): MoveOrDrop)
         }
-      case Uci.Drop(role, pos) =>
-        game.chess.drop(role, pos, metrics) map { case (ncg, drop) =>
-          ncg -> (Right(drop): MoveOrDrop)
+      case Uci.Drop(role, pos) =>{
+        logger.warn(s"Player applyUCI drop ULISES $role $pos $metrics")
+        val drop = game.chess.drop(role, pos, metrics) map {
+          case (ncg, drop) =>{
+            logger.warn(s"Chess drop returned ULISES")
+            ncg -> (Right(drop): MoveOrDrop)
+          }
         }
+        logger.warn(s"Player applied drop ULISES")
+        drop
+      }
     }).map {
       case (ncg, _) if ncg.clock.exists(_.outOfTime(game.turnColor, withGrace = false)) => Flagged
-      case (newChessGame, moveOrDrop) =>
+      case (newChessGame, moveOrDrop) =>{
+        logger.warn(s"Player appliedUCI end ULISES")
         MoveApplied(
           game.update(newChessGame, moveOrDrop, blur),
           moveOrDrop
         )
+      }
     }
 
   private def notifyMove(moveOrDrop: MoveOrDrop, game: Game): Unit = {

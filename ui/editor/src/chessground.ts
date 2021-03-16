@@ -1,9 +1,9 @@
 import { h } from 'snabbdom';
 import { VNode } from 'snabbdom/vnode';
-import { Chessground } from 'chessground';
-import { Config as CgConfig } from 'chessground/config';
-import { MouchEvent } from 'chessground/types';
-import * as util from 'chessground/util';
+import { Chessground } from 'takground/chessground';
+import { Config as CgConfig } from 'takground/config';
+import { MouchEvent } from 'takground/types';
+import * as util from 'takground/util';
 import changeColorHandle from 'common/coordsColor';
 import EditorCtrl from './ctrl';
 

@@ -54,6 +54,7 @@
     "ui/simul",
     "ui/site",
     "ui/swiss",
+    "ui/takground",
     "ui/tournament",
     "ui/tournamentSchedule",
     "ui/tournamentCalendar",

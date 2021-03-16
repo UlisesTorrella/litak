@@ -6,11 +6,11 @@ import makePromotion from './promotion';
 import moveTest from './moveTest';
 import PuzzleSession from './session';
 import throttle from 'common/throttle';
-import { Api as CgApi } from 'chessground/api';
+import { Api as CgApi } from 'takground/api';
 import { build as treeBuild, ops as treeOps, path as treePath, TreeWrapper } from 'tree';
 import { Chess } from 'chessops/chess';
 import { chessgroundDests, scalachessCharPair } from 'chessops/compat';
-import { Config as CgConfig } from 'chessground/config';
+import { Config as CgConfig } from 'takground/config';
 import { ctrl as cevalCtrl, CevalCtrl } from 'ceval';
 import { defer } from 'common/defer';
 import { defined, prop, Prop } from 'common';
@@ -19,7 +19,8 @@ import { parseFen, makeFen } from 'chessops/fen';
 import { parseSquare, parseUci, makeSquare, makeUci } from 'chessops/util';
 import { pgnToTree, mergeSolution } from './moveTree';
 import { Redraw, Vm, Controller, PuzzleOpts, PuzzleData, PuzzleResult, MoveTest, ThemeKey } from './interfaces';
-import { Role, Move, Outcome } from 'chessops/types';
+import { Role } from 'takground/types';
+import { Move, Outcome } from 'chessops/types';
 import { storedProp } from 'common/storage';
 
 export default function (opts: PuzzleOpts, redraw: Redraw): Controller {

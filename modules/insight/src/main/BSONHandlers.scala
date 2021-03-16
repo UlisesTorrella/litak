@@ -2,7 +2,6 @@ package lila.insight
 
 import reactivemongo.api.bson._
 
-import chess.opening.{ Ecopening, EcopeningDB }
 import chess.{ Color, Role }
 import lila.db.BSON
 import lila.db.dsl._
@@ -11,10 +10,6 @@ import lila.rating.PerfType
 
 private object BSONHandlers {
 
-  implicit val EcopeningBSONHandler = tryHandler[Ecopening](
-    { case BSONString(v) => EcopeningDB.allByEco get v toTry s"Invalid ECO $v" },
-    e => BSONString(e.eco)
-  )
   implicit val RelativeStrengthBSONHandler = tryHandler[RelativeStrength](
     { case BSONInteger(v) => RelativeStrength.byId get v toTry s"Invalid relative strength $v" },
     e => BSONInteger(e.id)
@@ -108,7 +103,6 @@ private object BSONHandlers {
           userId = r.str(userId),
           color = r.get[Color](color),
           perf = r.get[PerfType](perf),
-          eco = r.getO[Ecopening](eco),
           myCastling = r.get[Castling](myCastling),
           opponentRating = r.int(opponentRating),
           opponentStrength = r.get[RelativeStrength](opponentStrength),
@@ -129,7 +123,6 @@ private object BSONHandlers {
           userId           -> e.userId,
           color            -> e.color,
           perf             -> e.perf,
-          eco              -> e.eco,
           myCastling       -> e.myCastling,
           opponentRating   -> e.opponentRating,
           opponentStrength -> e.opponentStrength,

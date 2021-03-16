@@ -3,7 +3,7 @@ import klass from 'snabbdom/modules/class';
 import makeCtrl from './ctrl';
 import menuHover from 'common/menuHover';
 import view from './view/main';
-import { Chessground } from 'chessground';
+import { Chessground } from 'takground/chessground';
 import { Controller, PuzzleOpts } from './interfaces';
 import { init } from 'snabbdom';
 import { VNode } from 'snabbdom/vnode';

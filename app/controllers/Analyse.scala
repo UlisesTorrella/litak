@@ -92,8 +92,7 @@ final class Analyse(
                 withFlags = WithFlags(
                   movetimes = true,
                   clocks = true,
-                  division = true,
-                  opening = true
+                  division = true
                 )
               ) map { data =>
                 EnableSharedArrayBuffer(
@@ -103,7 +102,7 @@ final class Analyse(
                       data,
                       initialFen,
                       env.analyse
-                        .annotator(pgn, analysis, pov.game.opening, pov.game.winnerColor, pov.game.status)
+                        .annotator(pgn, analysis, pov.game.winnerColor, pov.game.status)
                         .toString,
                       analysis,
                       analysisInProgress,
@@ -129,7 +128,7 @@ final class Analyse(
             pov,
             lila.api.Mobile.Api.currentVersion,
             initialFenO = initialFen.some,
-            withFlags = WithFlags(opening = true)
+            withFlags = WithFlags()
           ) map { data =>
             Ok(html.analyse.embed(pov, data))
           }
@@ -165,7 +164,7 @@ final class Analyse(
         pov,
         initialFen,
         env.analyse
-          .annotator(pgn, analysis, pov.game.opening, pov.game.winnerColor, pov.game.status)
+          .annotator(pgn, analysis, pov.game.winnerColor, pov.game.status)
           .toString,
         simul,
         crosstable

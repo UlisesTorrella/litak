@@ -2,7 +2,6 @@ package lila.game
 
 import chess.Color.{ Black, White }
 import chess.format.{ FEN, Uci }
-import chess.opening.{ FullOpening, FullOpeningDB }
 import chess.variant.{ FromPosition, Standard, Variant }
 import chess.{ Castles, Centis, CheckCount, Clock, Color, Mode, MoveOrDrop, Speed, Status, Game => ChessGame }
 import org.joda.time.DateTime
@@ -552,7 +551,7 @@ case class Game(
       }
     }
 
-  def forecastable = started && playable && isCorrespondence && !hasAi
+  def forecastable = false//started && playable && isCorrespondence && !hasAi
 
   def hasBookmarks = bookmarks > 0
 
@@ -592,10 +591,6 @@ case class Game(
     copy(
       chess = chess.copy(turns = 0, startedAtTurn = 0)
     )
-
-  lazy val opening: Option[FullOpening.AtPly] =
-    if (fromPosition || !Variant.openingSensibleVariants(variant)) none
-    else FullOpeningDB search pgnMoves
 
   def synthetic = id == Game.syntheticId
 

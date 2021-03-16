@@ -1,8 +1,8 @@
 import { h } from 'snabbdom';
-import { Chessground } from 'chessground';
-import * as cg from 'chessground/types';
-import { Api as CgApi } from 'chessground/api';
-import { Config } from 'chessground/config';
+import { Chessground } from 'takground/chessground';
+import * as cg from 'takground/types';
+import { Api as CgApi } from 'takground/api';
+import { Config } from 'takground/config';
 import changeColorHandle from 'common/coordsColor';
 import resizeHandle from 'common/resize';
 import * as util from './util';

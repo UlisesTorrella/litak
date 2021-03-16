@@ -5,7 +5,7 @@ import klass from 'snabbdom/modules/class';
 import menuHover from 'common/menuHover';
 import props from 'snabbdom/modules/props';
 import view from './view';
-import { Chessground } from 'chessground';
+import { Chessground } from 'takground/chessground';
 import { EditorConfig } from './interfaces';
 import { init } from 'snabbdom';
 import { VNode } from 'snabbdom/vnode';

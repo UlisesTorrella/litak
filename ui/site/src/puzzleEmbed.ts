@@ -1,4 +1,4 @@
-import { Chessground } from 'chessground';
+import { Chessground } from 'takground/chessground';
 
 window.onload = () => {
   const el = document.querySelector('#daily-puzzle') as HTMLElement,

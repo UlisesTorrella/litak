@@ -221,7 +221,7 @@ final private[round] class RoundDuct(
 
     // round stuff
 
-    case p: HumanPlay =>
+    case p: HumanPlay =>{
       handle(p.playerId) { pov =>
         if (pov.player.isAi) fufail(s"player $pov can't play AI")
         else if (pov.game.outoftime(withGrace = true)) finisher.outOfTime(pov.game)
@@ -240,6 +240,7 @@ final private[round] class RoundDuct(
           MoveLatMonitor record lap.micros
         }
       )
+    }
 
     case p: BotPlay =>
       val res = proxy.withPov(PlayerId(p.playerId)) {
@@ -492,20 +493,26 @@ final private[round] class RoundDuct(
       handleAndPublish(op(g))
     }
 
-  private def handle(playerId: PlayerId)(op: Pov => Fu[Events]): Funit =
+  private def handle(playerId: PlayerId)(op: Pov => Fu[Events]): Funit ={
+    logger.warn(s"RoundDuct handle (ULISES)")
     proxy.withPov(playerId) {
-      _ ?? { pov =>
-        handleAndPublish(op(pov))
+      _ ?? { pov =>{
+          logger.warn(s"PERO ACA SI LLEGA (ULISES)")
+          handleAndPublish(op(pov))
+        }
       }
     }
+  }
 
   private def handle(color: Color)(op: Pov => Fu[Events]): Funit =
     proxy.withPov(color) { pov =>
       handleAndPublish(op(pov))
     }
 
-  private def handleAndPublish(events: Fu[Events]): Funit =
+  private def handleAndPublish(events: Fu[Events]): Funit ={
+    logger.warn(s"RoundDuct handle and publish (ULISES)")
     events dmap publish recover errorHandler("handle")
+  }
 
   private def handleAi(op: Pov => Fu[Events]): Funit =
     proxy.withGame {
@@ -516,9 +523,11 @@ final private[round] class RoundDuct(
 
   private def publish[A](events: Events): Unit =
     if (events.nonEmpty) {
+      logger.warn(s"RoundDuct about to publish ULISES")
       events foreach { e =>
         version = version.inc
         socketSend {
+          logger.warn(s"before the problem ulises")
           Protocol.Out.tellVersion(roomId, version, e)
         }
       }

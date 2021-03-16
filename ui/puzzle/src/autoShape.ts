@@ -1,9 +1,9 @@
 import { winningChances } from 'ceval';
-import { DrawShape } from 'chessground/draw';
+import { DrawShape } from 'takground/draw';
 import { Vm } from './interfaces';
-import { Api as CgApi } from 'chessground/api';
+import { Api as CgApi } from 'takground/api';
 import { CevalCtrl } from 'ceval';
-import { opposite } from 'chessground/util';
+import { opposite } from 'takground/util';
 
 interface Opts {
   vm: Vm;

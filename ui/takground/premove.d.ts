@@ -1,0 +1,9 @@
+import * as cg from './types';
+declare type Mobility = (x1: number, y1: number, x2: number, y2: number) => boolean;
+export declare const knight: Mobility;
+export declare const queen: Mobility;
+export declare const wallstone: Mobility;
+export declare const capstone: Mobility;
+export declare const flatstone: Mobility;
+export declare function premove(pieces: cg.Pieces, key: cg.Key, canCastle: boolean): cg.Key[];
+export {};

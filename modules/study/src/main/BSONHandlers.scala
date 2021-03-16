@@ -117,7 +117,6 @@ object BSONHandlers {
       private def readPocket(p: String)             = Crazyhouse.Pocket(p.view.flatMap(chess.Role.forsyth).toList)
       def reads(r: Reader) =
         Crazyhouse.Data(
-          promoted = r.getsD[Pos]("o").toSet,
           pockets = Crazyhouse.Pockets(
             white = readPocket(r.strD("w")),
             black = readPocket(r.strD("b"))
@@ -125,7 +124,6 @@ object BSONHandlers {
         )
       def writes(w: Writer, s: Crazyhouse.Data) =
         $doc(
-          "o" -> w.listO(s.promoted.toList),
           "w" -> w.strO(writePocket(s.pockets.white)),
           "b" -> w.strO(writePocket(s.pockets.black))
         )

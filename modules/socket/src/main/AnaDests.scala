@@ -3,9 +3,8 @@ package lila.socket
 import play.api.libs.json._
 
 import chess.format.FEN
-import chess.opening._
 import chess.variant.Variant
-import lila.tree.Node.{ destString, openingWriter }
+import lila.tree.Node.{ destString }
 
 case class AnaDests(
     variant: Variant,
@@ -23,17 +22,12 @@ case class AnaDests(
       sit.playable(false) ?? destString(sit.destinations)
     }
 
-  lazy val opening = Variant.openingSensibleVariants(variant) ?? {
-    FullOpeningDB findByFen fen
-  }
-
   def json =
     Json
       .obj(
         "dests" -> dests,
         "path"  -> path
       )
-      .add("opening" -> opening)
       .add("ch", chapterId)
 }
 

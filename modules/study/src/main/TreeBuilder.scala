@@ -1,6 +1,5 @@
 package lila.study
 
-import chess.opening._
 import chess.variant.Variant
 import lila.tree
 
@@ -33,7 +32,6 @@ object TreeBuilder {
       crazyData = node.crazyData,
       eval = node.score.map(_.eval),
       children = toBranches(node.children, variant),
-      opening = Variant.openingSensibleVariants(variant) ?? FullOpeningDB.findByFen(node.fen),
       forceVariation = node.forceVariation
     )
 
@@ -50,7 +48,6 @@ object TreeBuilder {
       crazyData = root.crazyData,
       eval = root.score.map(_.eval),
       children = toBranches(root.children, variant),
-      opening = Variant.openingSensibleVariants(variant) ?? FullOpeningDB.findByFen(root.fen)
     )
 
   private def toBranches(children: Node.Children, variant: Variant): List[tree.Branch] =

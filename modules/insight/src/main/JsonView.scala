@@ -13,19 +13,6 @@ final class JsonView {
 
   def ui(ecos: Set[String], asMod: Boolean)(implicit lang: Lang) = {
 
-    val openingJson = Json.obj(
-      "key"         -> D.Opening.key,
-      "name"        -> D.Opening.name,
-      "position"    -> D.Opening.position,
-      "description" -> D.Opening.description.render,
-      "values" -> Dimension
-        .valuesOf(D.Opening)
-        .filter { o =>
-          ecos contains o.eco
-        }
-        .map(Dimension.valueToJson(D.Opening))
-    )
-
     val dimensionCategs = List(
       Categ(
         "Setup",
@@ -40,7 +27,6 @@ final class JsonView {
       Categ(
         "Game",
         List(
-          openingJson,
           Json.toJson(D.MyCastling: Dimension[_]),
           Json.toJson(D.OpCastling: Dimension[_]),
           Json.toJson(D.QueenTrade: Dimension[_])

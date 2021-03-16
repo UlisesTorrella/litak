@@ -25,7 +25,7 @@ final class PgnDump(
       Parser.full(pgni.pgn).toOption
     }
     val tagsFuture =
-      if (flags.tags) tags(game, initialFen, imported, withOpening = flags.opening, teams = teams)
+      if (flags.tags) tags(game, initialFen, imported, teams = teams)
       else fuccess(Tags(Nil))
     tagsFuture map { ts =>
       val turns = flags.moves ?? {
@@ -77,7 +77,6 @@ final class PgnDump(
       game: Game,
       initialFen: Option[FEN],
       imported: Option[ParsedPgn],
-      withOpening: Boolean,
       teams: Option[Color.Map[String]] = None
   ): Fu[Tags] =
     gameLightUsers(game) map { case (wu, bu) =>
@@ -116,8 +115,6 @@ final class PgnDump(
           teams.map { t => Tag("BlackTeam", t.black) },
           Tag(_.Variant, game.variant.name.capitalize).some,
           Tag.timeControl(game.clock.map(_.config)).some,
-          Tag(_.ECO, game.opening.fold("?")(_.opening.eco)).some,
-          withOpening option Tag(_.Opening, game.opening.fold("?")(_.opening.name)),
           Tag(
             _.Termination, {
               import chess.Status._
@@ -176,7 +173,6 @@ object PgnDump {
       moves: Boolean = true,
       tags: Boolean = true,
       evals: Boolean = true,
-      opening: Boolean = true,
       literate: Boolean = false,
       pgnInJson: Boolean = false,
       delayMoves: Boolean = false

@@ -1,9 +1,9 @@
 import { h } from 'snabbdom';
 import * as ground from './ground';
-import * as cg from 'chessground/types';
-import { DrawShape } from 'chessground/draw';
+import * as cg from 'takground/types';
+import { DrawShape } from 'takground/draw';
 import * as xhr from './xhr';
-import { key2pos } from 'chessground/util';
+import { key2pos } from 'takground/util';
 import { bind } from './util';
 import RoundController from './ctrl';
 import { onInsert } from './util';

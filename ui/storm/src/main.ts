@@ -2,7 +2,7 @@ import attributes from 'snabbdom/modules/attributes';
 import klass from 'snabbdom/modules/class';
 import menuHover from 'common/menuHover';
 import StormCtrl from './ctrl';
-import { Chessground } from 'chessground';
+import { Chessground } from 'takground/chessground';
 import { init } from 'snabbdom';
 import { StormOpts } from './interfaces';
 import { VNode } from 'snabbdom/vnode';

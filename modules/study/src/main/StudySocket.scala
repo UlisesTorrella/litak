@@ -259,7 +259,6 @@ final private class StudySocket(
     commentWriter,
     defaultNodeJsonWriter,
     glyphsWriter,
-    openingWriter,
     shapesWrites
   }
   private type SendToStudy = Study.Id => Unit
@@ -288,7 +287,6 @@ final private class StudySocket(
           "p" -> pos,
           "w" -> who,
           "d" -> dests.dests,
-          "o" -> dests.opening,
           "s" -> sticky
         )
         .add("relay", relay)

@@ -1,11 +1,11 @@
 import { isPlayerTurn } from 'game/game';
-import { dragNewPiece } from 'chessground/drag';
-import { setDropMode, cancelDropMode } from 'chessground/drop';
+import { dragNewPiece } from 'takground/drag';
+import { setDropMode, cancelDropMode } from 'takground/drop';
 import RoundController from '../ctrl';
-import * as cg from 'chessground/types';
+import * as cg from 'takground/types';
 import { RoundData } from '../interfaces';
 
-export const pieceRoles: cg.Role[] = ['pawn', 'knight', 'bishop', 'rook', 'queen'];
+export const pieceRoles: cg.Role[] = ['flatstone', 'capstone', 'wallstone'];
 
 export function drag(ctrl: RoundController, e: cg.MouchEvent): void {
   if (e.button !== undefined && e.button !== 0) return; // only touch or left click
@@ -32,8 +32,6 @@ export function valid(data: RoundData, role: cg.Role, key: cg.Key): boolean {
   }
 
   if (!isPlayerTurn(data)) return false;
-
-  if (role === 'pawn' && (key[1] === '1' || key[1] === '8')) return false;
 
   const dropStr = data.possibleDrops;
 
@@ -138,6 +136,7 @@ export function init(ctrl: RoundController) {
 // Images are used in _zh.scss, which should be kept in sync.
 function preloadMouseIcons(data: RoundData) {
   const colorKey = data.player.color[0];
-  for (const pKey of 'PNBRQ') fetch(lichess.assetUrl(`piece/cburnett/${colorKey}${pKey}.svg`));
+  for (const pKey of 'FCW') fetch(lichess.assetUrl(`piece/cburnett/${colorKey}${pKey}.svg`));
   mouseIconsLoaded = true;
 }
+// F as in flatstone, C as in capstone...

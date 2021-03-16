@@ -1,9 +1,9 @@
 import { h } from 'snabbdom';
 import { bind, onInsert } from './util';
-import { Api as CgApi } from 'chessground/api';
-import { Config as CgConfig } from 'chessground/config';
-import * as cgUtil from 'chessground/util';
-import { Role } from 'chessground/types';
+import { Api as CgApi } from 'takground/api';
+import { Config as CgConfig } from 'takground/config';
+import * as cgUtil from 'takground/util';
+import { Role } from 'takground/types';
 import { MaybeVNode, Redraw, Promotion } from './interfaces';
 
 export default function (

@@ -4,7 +4,7 @@ import { prop, Prop } from 'common';
 import * as xhr from 'common/xhr';
 import AnalyseController from '../ctrl';
 import { makeConfig as makeCgConfig } from '../ground';
-import { Chessground } from 'chessground';
+import { Chessground } from 'takground/chessground';
 import { Redraw, AnalyseData, MaybeVNodes } from '../interfaces';
 import { Player } from 'game';
 import {

@@ -120,7 +120,6 @@ final class Api(
       analysis = getBool("with_analysis", req),
       moves = getBool("with_moves", req),
       fens = getBool("with_fens", req),
-      opening = getBool("with_opening", req),
       moveTimes = getBool("with_movetimes", req),
       token = get("token", req)
     )

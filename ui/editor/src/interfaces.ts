@@ -1,4 +1,4 @@
-import { Role } from 'chessground/types';
+import { Role } from 'takground/types';
 
 export type CastlingToggle = 'K' | 'Q' | 'k' | 'q';
 

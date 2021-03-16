@@ -163,9 +163,10 @@ final class GameRepo(val coll: Coll)(implicit ec: scala.concurrent.ExecutionCont
       )
       .void
 
-  def update(progress: Progress): Funit =
-    saveDiff(progress.origin, GameDiff(progress.origin, progress.game))
-
+  def update(progress: Progress): Funit ={
+      logger.warn(s"GAMEREPO update")
+      saveDiff(progress.origin, GameDiff(progress.origin, progress.game))
+  }
   private def saveDiff(origin: Game, diff: GameDiff.Diff): Funit =
     diff match {
       case (Nil, Nil) => funit
@@ -326,7 +327,6 @@ final class GameRepo(val coll: Coll)(implicit ec: scala.concurrent.ExecutionCont
   private val finishUnsets = $doc(
     F.positionHashes                              -> true,
     F.playingUids                                 -> true,
-    F.unmovedRooks                                -> true,
     ("p0." + Player.BSONFields.lastDrawOffer)     -> true,
     ("p1." + Player.BSONFields.lastDrawOffer)     -> true,
     ("p0." + Player.BSONFields.isOfferingDraw)    -> true,

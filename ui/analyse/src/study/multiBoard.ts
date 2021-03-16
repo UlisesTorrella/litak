@@ -1,6 +1,6 @@
 import { h } from 'snabbdom';
 import { VNode } from 'snabbdom/vnode';
-import { opposite } from 'chessground/util';
+import { opposite } from 'takground/util';
 import { StudyCtrl, ChapterPreview, ChapterPreviewPlayer, Position } from './interfaces';
 import { MaybeVNodes } from '../interfaces';
 import { multiBoard as xhrLoad } from './studyXhr';

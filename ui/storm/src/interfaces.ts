@@ -1,4 +1,4 @@
-import { Role } from 'chessground/types';
+import { Role } from 'takground/types';
 import { Prop } from 'common';
 import { VNode } from 'snabbdom/vnode';
 

@@ -139,7 +139,6 @@ final private class RelayFetch(
     moves = true,
     tags = true,
     evals = false,
-    opening = false,
     literate = false,
     pgnInJson = false,
     delayMoves = true

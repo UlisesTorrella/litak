@@ -1,0 +1,38 @@
+{
+  "name": "takground",
+  "version": "0.0.1",
+  "private": true,
+  "description": "adaptation of chessground for tak",
+  "keywords": [
+    "tak",
+    "lichess"
+  ],
+  "author": "Ulises Torrella",
+  "license": "AGPL-3.0-or-later",
+  "scripts": {
+    "compile": "../../node_modules/typescript/bin/tsc --incremental",
+    "dev": "yarn run compile",
+    "prod": "yarn run compile"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^17",
+    "@rollup/plugin-typescript": "^8",
+    "@typescript-eslint/eslint-plugin": "^4",
+    "@typescript-eslint/parser": "^4",
+    "eslint": "^7",
+    "prettier": "^2",
+    "rollup": "^2",
+    "rollup-plugin-terser": "^7",
+    "tslib": "^2",
+    "typescript": "^4"
+  },
+  "dependencies": {},
+  "files": [
+    "/*.js",
+    "/*.d.ts",
+    "/*.js.map",
+    "/assets/*.css",
+    "/src/*.ts",
+    "!/rollup.config.js"
+  ]
+}

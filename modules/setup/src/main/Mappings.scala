@@ -4,7 +4,7 @@ import play.api.data.Forms._
 import play.api.data.format.Formats._
 
 import chess.Mode
-import chess.{ variant => V }
+import chess.variant.Variant
 import lila.rating.RatingRange
 import lila.lobby.Color
 
@@ -15,17 +15,7 @@ private object Mappings {
   val aiVariants                = number.verifying(Config.aiVariants contains _)
   val variantWithVariants       = number.verifying(Config.variantsWithVariants contains _)
   val variantWithFenAndVariants = number.verifying(Config.variantsWithFenAndVariants contains _)
-  val boardApiVariants = Set(
-    V.Standard.key,
-    V.Chess960.key,
-    V.Crazyhouse.key,
-    V.KingOfTheHill.key,
-    V.ThreeCheck.key,
-    V.Antichess.key,
-    V.Atomic.key,
-    V.Horde.key,
-    V.RacingKings.key
-  )
+  val boardApiVariants = Variant.all.map( x => x.key ).toSet
   val boardApiVariantKeys      = text.verifying(boardApiVariants contains _)
   val time                     = of[Double].verifying(HookConfig validateTime _)
   val increment                = number.verifying(HookConfig validateIncrement _)

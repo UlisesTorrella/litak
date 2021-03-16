@@ -2,7 +2,7 @@ import { init } from 'snabbdom';
 import { VNode } from 'snabbdom/vnode';
 import klass from 'snabbdom/modules/class';
 import attributes from 'snabbdom/modules/attributes';
-import { Chessground } from 'chessground';
+import { Chessground } from 'takground/chessground';
 import { TournamentOpts } from './interfaces';
 import TournamentController from './ctrl';
 import LichessChat from 'chat';

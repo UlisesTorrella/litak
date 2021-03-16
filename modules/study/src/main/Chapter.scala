@@ -5,7 +5,6 @@ import chess.variant.Variant
 import chess.{ Centis, Color }
 import org.joda.time.DateTime
 
-import chess.opening.{ FullOpening, FullOpeningDB }
 import lila.tree.Node.{ Comment, Gamebook, Shapes }
 import lila.user.User
 
@@ -59,10 +58,6 @@ case class Chapter(
 
   def forceVariation(force: Boolean, path: Path): Option[Chapter] =
     updateRoot(_.forceVariationAt(force, path))
-
-  def opening: Option[FullOpening] =
-    if (!Variant.openingSensibleVariants(setup.variant)) none
-    else FullOpeningDB searchInFens root.mainline.map(_.fen)
 
   def isEmptyInitial = order == 1 && root.children.nodes.isEmpty
 

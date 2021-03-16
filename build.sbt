@@ -17,8 +17,7 @@ resourceDirectory in Compile := baseDirectory.value / "conf"
 
 // format: off
 libraryDependencies ++= akka.bundle ++ playWs.bundle ++ Seq(
-  macwire.macros, macwire.util, play.json, jodaForms,
-  chess, compression, scalalib, hasher,
+  macwire.macros, macwire.util, play.json, jodaForms, compression, scalalib, hasher,
   reactivemongo.driver, reactivemongo.kamon, maxmind, prismic, scalatags,
   kamon.core, kamon.influxdb, kamon.metrics, kamon.prometheus,
   scrimage, scaffeine, lettuce, uaparser
@@ -28,7 +27,7 @@ libraryDependencies ++= akka.bundle ++ playWs.bundle ++ Seq(
 }
 
 lazy val modules = Seq(
-  common, db, rating, user, security, hub, socket,
+  common, db, rating, user, security, hub, socket, chess,
   msg, notifyModule, i18n, game, bookmark, search,
   gameSearch, timeline, forum, forumSearch, team, teamSearch,
   analyse, mod, round, pool, lobby, setup,
@@ -68,6 +67,11 @@ lazy val i18n = smallModule("i18n",
 
 lazy val puzzle = module("puzzle",
   Seq(common, memo, hub, history, db, user, rating, pref, tree, game),
+  reactivemongo.bundle
+)
+
+lazy val chess = module("chess",
+  Seq(),
   reactivemongo.bundle
 )
 
@@ -112,9 +116,9 @@ lazy val evaluation = module("evaluation",
 )
 
 lazy val common = smallModule("common",
-  Seq(),
+  Seq(chess),
   Seq(
-    scalalib, chess, autoconfig,
+    scalalib, autoconfig,
     kamon.core, scalatags, jodaForms, scaffeine, specs2, apacheText
   ) ++ reactivemongo.bundle ++ flexmark.bundle
 )

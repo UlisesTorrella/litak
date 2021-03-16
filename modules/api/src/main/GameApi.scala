@@ -234,7 +234,6 @@ final private[api] class GameApi(
         }),
         "analysis" -> analysisOption.ifTrue(withFlags.analysis).map(analysisJson.moves(_)),
         "moves"    -> withFlags.moves.option(g.pgnMoves mkString " "),
-        "opening"  -> withFlags.opening.??(g.opening),
         "fens" -> (withFlags.fens && g.finished) ?? {
           chess.Replay
             .boards(
@@ -258,7 +257,6 @@ object GameApi {
       analysis: Boolean = false,
       moves: Boolean = false,
       fens: Boolean = false,
-      opening: Boolean = false,
       moveTimes: Boolean = false,
       blurs: Boolean = false,
       token: Option[String] = none

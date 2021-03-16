@@ -188,9 +188,6 @@ final private class PovToEntry(
       userId = myId,
       color = pov.color,
       perf = perfType,
-      eco =
-        if (game.playable || game.turns < 4 || game.fromPosition || game.variant.exotic) none
-        else chess.opening.Ecopening fromGame game.pgnMoves.toList,
       myCastling = Castling.fromMoves(game pgnMoves pov.color),
       opponentRating = opRating,
       opponentStrength = RelativeStrength(opRating - myRating),

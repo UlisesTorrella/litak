@@ -157,7 +157,6 @@ final class JsonView(
             "game" -> gameJsonView(game, initialFen)
               .add("moveCentis" -> (withFlags.movetimes ?? game.moveTimes.map(_.map(_.centis))))
               .add("division" -> withFlags.division.option(divider(game, initialFen)))
-              .add("opening" -> game.opening)
               .add("importedBy" -> game.pgnImport.flatMap(_.user)),
             "clock"          -> game.clock.map(clockJson),
             "correspondence" -> game.correspondenceClock,
@@ -219,7 +218,6 @@ final class JsonView(
           .obj(
             "id"         -> gameId,
             "variant"    -> game.variant,
-            "opening"    -> game.opening,
             "initialFen" -> (initialFen | chess.format.Forsyth.initial),
             "fen"        -> fen,
             "turns"      -> game.turns,
@@ -283,7 +281,6 @@ final class JsonView(
 object JsonView {
 
   case class WithFlags(
-      opening: Boolean = false,
       movetimes: Boolean = false,
       division: Boolean = false,
       clocks: Boolean = false,

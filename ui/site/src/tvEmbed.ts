@@ -1,4 +1,4 @@
-import { Chessground } from 'chessground';
+import { Chessground } from 'takground/chessground';
 import * as miniGame from './component/mini-game';
 import loadClockWidget from './component/clock-widget';
 

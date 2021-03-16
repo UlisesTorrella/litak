@@ -1,4 +1,4 @@
-import { initial as initialBoardFen } from 'chessground/fen';
+import { initial as initialBoardFen } from 'takground/fen';
 import { ops as treeOps } from 'tree';
 import AnalyseCtrl from './ctrl';
 

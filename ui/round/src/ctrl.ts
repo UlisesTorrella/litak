@@ -11,9 +11,9 @@ import * as title from './title';
 import * as promotion from './promotion';
 import * as blur from './blur';
 import * as speech from './speech';
-import * as cg from 'chessground/types';
-import { Config as CgConfig } from 'chessground/config';
-import { Api as CgApi } from 'chessground/api';
+import * as cg from 'takground/types';
+import { Config as CgConfig } from 'takground/config';
+import { Api as CgApi } from 'takground/api';
 import { ClockController } from './clock/clockCtrl';
 import { CorresClockController, ctrl as makeCorresClock } from './corresClock/corresClockCtrl';
 import MoveOn from './moveOn';
@@ -166,6 +166,7 @@ export default class RoundController {
 
   private onUserNewPiece = (role: cg.Role, key: cg.Key, meta: cg.MoveMetadata) => {
     if (!this.replaying() && crazyValid(this.data, role, key)) {
+      console.log(this.data);
       this.sendNewPiece(role, key, !!meta.predrop);
     } else this.jump(this.ply);
   };

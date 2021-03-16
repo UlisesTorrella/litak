@@ -15,8 +15,7 @@ import lila.game.Pov
 object replay {
 
   private[analyse] def titleOf(pov: Pov)(implicit lang: Lang) =
-    s"${playerText(pov.game.whitePlayer)} vs ${playerText(pov.game.blackPlayer)}: ${pov.game.opening
-      .fold(trans.analysis.txt())(_.opening.ecoName)}"
+    s"${playerText(pov.game.whitePlayer)} vs ${playerText(pov.game.blackPlayer)}"
 
   def apply(
       pov: Pov,

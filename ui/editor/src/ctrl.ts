@@ -9,7 +9,7 @@ import {
   CastlingToggles,
   CASTLING_TOGGLES,
 } from './interfaces';
-import { Api as CgApi } from 'chessground/api';
+import { Api as CgApi } from 'takground/api';
 import { Rules, Square } from 'chessops/types';
 import { SquareSet } from 'chessops/squareSet';
 import { Board } from 'chessops/board';

@@ -1,7 +1,7 @@
 import PuzzleSession from './session';
-import { Api as CgApi } from 'chessground/api';
+import { Api as CgApi } from 'takground/api';
 import { CevalCtrl, NodeEvals } from 'ceval';
-import { Config as CgConfig } from 'chessground/config';
+import { Config as CgConfig } from 'takground/config';
 import { Deferred } from 'common/defer';
 import { Outcome } from 'chessops/types';
 import { Prop } from 'common';

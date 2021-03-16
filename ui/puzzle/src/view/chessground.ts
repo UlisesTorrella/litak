@@ -1,7 +1,7 @@
 import changeColorHandle from 'common/coordsColor';
 import resizeHandle from 'common/resize';
-import { Chessground } from 'chessground';
-import { Config as CgConfig } from 'chessground/config';
+import { Chessground } from 'takground/chessground';
+import { Config as CgConfig } from 'takground/config';
 import { Controller } from '../interfaces';
 import { h } from 'snabbdom';
 import { VNode } from 'snabbdom/vnode';

@@ -7,7 +7,7 @@ import makeCtrl from './ctrl';
 import menuHover from 'common/menuHover';
 import view from './view';
 import { AnalyseApi, AnalyseOpts } from './interfaces';
-import { Chessground } from 'chessground';
+import { Chessground } from 'takground/chessground';
 import { init } from 'snabbdom';
 import { VNode } from 'snabbdom/vnode';
 

@@ -153,7 +153,6 @@ final class Game(
       tags = getBoolOpt("tags", req) | true,
       clocks = getBoolOpt("clocks", req) | extended,
       evals = getBoolOpt("evals", req) | extended,
-      opening = getBoolOpt("opening", req) | extended,
       literate = getBoolOpt("literate", req) | false,
       pgnInJson = getBoolOpt("pgnInJson", req) | false,
       delayMoves = !get("key", req).exists(env.noDelaySecretSetting.get().value.contains)

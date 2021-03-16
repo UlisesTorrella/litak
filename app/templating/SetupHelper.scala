@@ -124,16 +124,7 @@ trait SetupHelper { self: I18nHelper =>
   def translatedVariantChoicesWithVariants(
       encode: Variant => String
   )(implicit lang: Lang): List[SelectChoice] =
-    translatedVariantChoices(encode) ::: List(
-      chess.variant.Crazyhouse,
-      chess.variant.Chess960,
-      chess.variant.KingOfTheHill,
-      chess.variant.ThreeCheck,
-      chess.variant.Antichess,
-      chess.variant.Atomic,
-      chess.variant.Horde,
-      chess.variant.RacingKings
-    ).map(variantTuple(encode))
+    translatedVariantChoices(encode) ::: Variant.all.map(variantTuple(encode))
 
   def translatedVariantChoicesWithFen(implicit lang: Lang) =
     translatedVariantChoices :+

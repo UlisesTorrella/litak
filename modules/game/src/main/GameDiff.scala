@@ -68,7 +68,6 @@ object GameDiff {
       dTry(oldPgn, _.pgnMoves, writeBytes compose f.encode)
       dTry(binaryPieces, _.board.pieces, writeBytes compose BinaryFormat.piece.write)
       d(positionHashes, _.history.positionHashes, w.bytes)
-      dTry(unmovedRooks, _.history.unmovedRooks, writeBytes compose BinaryFormat.unmovedRooks.write)
       dTry(castleLastMove, makeCastleLastMove, CastleLastMove.castleLastMoveBSONHandler.writeTry)
       // since variants are always OldBin
       if (a.variant.threeCheck)

@@ -1,4 +1,4 @@
-import * as cg from 'chessground/types';
+import * as cg from 'takground/types';
 import * as xhr from './xhr';
 import debounce from './debounce';
 

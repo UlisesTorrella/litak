@@ -1,7 +1,7 @@
-import * as cg from 'chessground/types';
+import * as cg from 'takground/types';
 import { h } from 'snabbdom';
 import { Hooks } from 'snabbdom/hooks';
-import { opposite } from 'chessground/util';
+import { opposite } from 'takground/util';
 import { Redraw, EncodedDests, Dests, MaterialDiff, Step, CheckCount } from './interfaces';
 import { VNodeData } from 'snabbdom/vnode';
 
@@ -12,6 +12,9 @@ const pieceScores = {
   rook: 5,
   queen: 9,
   king: 0,
+  capstone: 3,
+  wallstone: 2,
+  flatstone: 1
 };
 
 export const justIcon = (icon: string): VNodeData => ({
@@ -56,8 +59,8 @@ export function parsePossibleMoves(dests?: EncodedDests): Dests {
 // {white: {pawn: 3 queen: 1}, black: {bishop: 2}}
 export function getMaterialDiff(pieces: cg.Pieces): MaterialDiff {
   const diff: MaterialDiff = {
-    white: { king: 0, queen: 0, rook: 0, bishop: 0, knight: 0, pawn: 0 },
-    black: { king: 0, queen: 0, rook: 0, bishop: 0, knight: 0, pawn: 0 },
+    white: { king: 0, queen: 0, rook: 0, bishop: 0, knight: 0, pawn: 0, capstone: 0, flatstone: 0, wallstone: 0 },
+    black: { king: 0, queen: 0, rook: 0, bishop: 0, knight: 0, pawn: 0, capstone: 0, flatstone: 0, wallstone: 0 },
   };
   for (const p of pieces.values()) {
     const them = diff[opposite(p.color)];

@@ -6,7 +6,7 @@ import RoundController from '../ctrl';
 import { h } from 'snabbdom';
 import { plyStep } from '../round';
 import { Position, MaterialDiff, MaterialDiffSide, CheckCount } from '../interfaces';
-import { read as fenRead } from 'chessground/fen';
+import { read as fenRead } from 'takground/fen';
 import { render as keyboardMove } from '../keyboardMove';
 import { render as renderGround } from '../ground';
 import { renderTable } from './table';

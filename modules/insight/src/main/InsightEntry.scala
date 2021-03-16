@@ -1,7 +1,6 @@
 package lila.insight
 
 import cats.data.NonEmptyList
-import chess.opening.Ecopening
 import chess.{ Color, Role }
 import org.joda.time.DateTime
 
@@ -14,7 +13,6 @@ case class InsightEntry(
     userId: String,
     color: Color,
     perf: PerfType,
-    eco: Option[Ecopening],
     myCastling: Castling,
     opponentRating: Int,
     opponentStrength: RelativeStrength,

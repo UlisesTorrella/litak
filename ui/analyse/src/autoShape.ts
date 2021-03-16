@@ -1,9 +1,9 @@
 import { parseUci, makeSquare } from 'chessops/util';
 import { isDrop } from 'chessops/types';
 import { winningChances } from 'ceval';
-import * as cg from 'chessground/types';
-import { opposite } from 'chessground/util';
-import { DrawShape } from 'chessground/draw';
+import * as cg from 'takground/types';
+import { opposite } from 'takground/util';
+import { DrawShape } from 'takground/draw';
 import AnalyseCtrl from './ctrl';
 
 function pieceDrop(key: cg.Key, role: cg.Role, color: Color): DrawShape {

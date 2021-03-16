@@ -1,10 +1,10 @@
 import { h } from 'snabbdom';
 import { VNode } from 'snabbdom/vnode';
-import { Pieces } from 'chessground/types';
-import { Rank, File } from 'chessground/types';
-import { invRanks, allKeys } from 'chessground/util';
+import { Pieces } from 'takground/types';
+import { Rank, File } from 'takground/types';
+import { invRanks, allKeys } from 'takground/util';
 import { Setting, makeSetting } from './setting';
-import { files } from 'chessground/types';
+import { files } from 'takground/types';
 import { parseFen } from 'chessops/fen';
 import { Chess } from 'chessops/chess';
 import { chessgroundDests } from 'chessops/compat';
@@ -36,8 +36,8 @@ const anna: { [letter: string]: string } = {
   g: 'gustav',
   h: 'hector',
 };
-const roles: { [letter: string]: string } = { P: 'pawn', R: 'rook', N: 'knight', B: 'bishop', Q: 'queen', K: 'king' };
-const letters = { pawn: 'p', rook: 'r', knight: 'n', bishop: 'b', queen: 'q', king: 'k' };
+const roles: { [letter: string]: string } = { P: 'pawn', R: 'rook', N: 'knight', B: 'bishop', Q: 'queen', K: 'king', F: 'flatstone', W: 'wallstone', C: 'capstone' };
+const letters = { pawn: 'p', rook: 'r', knight: 'n', bishop: 'b', queen: 'q', king: 'k', capstone: 'c', flatstone: 'f', wallstone: 'w' };
 
 const letterPiece: { [letter: string]: string } = {
   p: 'p',
@@ -46,12 +46,18 @@ const letterPiece: { [letter: string]: string } = {
   b: 'b',
   q: 'q',
   k: 'k',
+  f: 'f',
+  c: 'c',
+  w: 'c',
   P: 'p',
   R: 'r',
   N: 'n',
   B: 'b',
   Q: 'q',
   K: 'k',
+  F: 'f',
+  C: 'c',
+  W: 'w'
 };
 const whiteUpperLetterPiece: { [letter: string]: string } = {
   p: 'p',
@@ -60,12 +66,18 @@ const whiteUpperLetterPiece: { [letter: string]: string } = {
   b: 'b',
   q: 'q',
   k: 'k',
+  f: 'f',
+  c: 'c',
+  w: 'w',
   P: 'P',
   R: 'R',
   N: 'N',
   B: 'B',
   Q: 'Q',
   K: 'K',
+  F: 'F',
+  C: 'C',
+  W: 'W'
 };
 const namePiece: { [letter: string]: string } = {
   p: 'pawn',
@@ -74,12 +86,18 @@ const namePiece: { [letter: string]: string } = {
   b: 'bishop',
   q: 'queen',
   k: 'king',
+  f: 'flatstone',
+  c: 'capstone',
+  w: 'wallstone',
   P: 'pawn',
   R: 'rook',
   N: 'knight',
   B: 'bishop',
   Q: 'queen',
   K: 'king',
+  F: 'flatstone',
+  C: 'capstone',
+  W: 'wallstone'
 };
 const whiteUpperNamePiece: { [letter: string]: string } = {
   p: 'pawn',
@@ -88,12 +106,18 @@ const whiteUpperNamePiece: { [letter: string]: string } = {
   b: 'bishop',
   q: 'queen',
   k: 'king',
+  f: 'flatstone',
+  c: 'capstone',
+  w: 'wallstone',
   P: 'Pawn',
   R: 'Rook',
   N: 'Knight',
   B: 'Bishop',
   Q: 'Queen',
   K: 'King',
+  F: 'Flatstone',
+  C: 'Capstone',
+  W: 'Wallstone'
 };
 const skipToFile: { [letter: string]: string } = {
   '!': 'a',

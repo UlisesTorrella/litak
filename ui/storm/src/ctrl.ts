@@ -2,15 +2,15 @@ import * as xhr from './xhr';
 import config from './config';
 import makePromotion from './promotion';
 import sign from './sign';
-import { Api as CgApi } from 'chessground/api';
+import { Api as CgApi } from 'takground/api';
 import { Chess } from 'chessops/chess';
 import { chessgroundDests } from 'chessops/compat';
-import { Config as CgConfig } from 'chessground/config';
+import { Config as CgConfig } from 'takground/config';
 import { getNow } from './util';
 import { parseFen, makeFen } from 'chessops/fen';
 import { parseUci, opposite } from 'chessops/util';
 import { prop, Prop } from 'common';
-import { Role } from 'chessground/types';
+import { Role } from 'takground/types';
 import { StormOpts, StormData, StormPuzzle, StormVm, Promotion, TimeMod, StormRun, StormPrefs } from './interfaces';
 
 export default class StormCtrl {

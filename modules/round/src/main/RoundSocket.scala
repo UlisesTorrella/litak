@@ -70,6 +70,7 @@ final class RoundSocket(
     }
 
   val rounds = new DuctConcMap[RoundDuct](
+    // here mk is a duct that is a tellable that takes an actor that takes msgs
     mkDuct = id => {
       val proxy = new GameProxy(id, proxyDependencies)
       val duct = new RoundDuct(
@@ -91,7 +92,10 @@ final class RoundSocket(
     initialCapacity = 65536
   )
 
-  private def tellRound(gameId: Game.Id, msg: Any): Unit = rounds.tell(gameId.value, msg)
+  private def tellRound(gameId: Game.Id, msg: Any): Unit = {
+    logger.warn(s"telling round ULISES")
+    rounds.tell(gameId.value, msg)
+  }
 
   private lazy val roundHandler: Handler = {
     case Protocol.In.PlayerMove(fullId, uci, blur, lag) if !stopping =>
@@ -276,10 +280,12 @@ object RoundSocket {
               } yield PlayerDo(FullId(fullId), tpe)
             }
           case "r/move" =>
-            raw.get(5) { case Array(fullId, uciS, blurS, lagS, mtS) =>
-              Uci(uciS) map { uci =>
-                PlayerMove(FullId(fullId), uci, P.In.boolean(blurS), MoveMetrics(centis(lagS), centis(mtS)))
-              }
+            raw.get(5) {
+              case Array(fullId, uciS, blurS, lagS, mtS) =>
+                Uci(uciS) map { uci =>
+                  PlayerMove(FullId(fullId), uci, P.In.boolean(blurS), MoveMetrics(centis(lagS), centis(mtS)))
+                }
+
             }
           case "chat/say" =>
             raw.get(3) { case Array(roomId, author, msg) =>
@@ -346,6 +352,7 @@ object RoundSocket {
           } foreach flags.+=
         if (e.troll) flags += 't'
         if (flags.isEmpty) flags += '-'
+        logger.warn(s"r/ver $roomId $version $flags ${e.typ} ${e.data} ULISES")
         s"r/ver $roomId $version $flags ${e.typ} ${e.data}"
       }
 

@@ -1,10 +1,10 @@
 import { h } from 'snabbdom';
 import { VNode } from 'snabbdom/vnode';
-import { Chessground } from 'chessground';
-import { Api as CgApi } from 'chessground/api';
-import { Config as CgConfig } from 'chessground/config';
-import * as cg from 'chessground/types';
-import { DrawShape } from 'chessground/draw';
+import { Chessground } from 'takground/chessground';
+import { Api as CgApi } from 'takground/api';
+import { Config as CgConfig } from 'takground/config';
+import * as cg from 'takground/types';
+import { DrawShape } from 'takground/draw';
 import changeColorHandle from 'common/coordsColor';
 import resizeHandle from 'common/resize';
 import AnalyseCtrl from './ctrl';

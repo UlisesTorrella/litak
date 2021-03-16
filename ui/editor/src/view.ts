@@ -1,8 +1,8 @@
 import { h } from 'snabbdom';
 import { VNode } from 'snabbdom/vnode';
-import { MouchEvent, NumberPair } from 'chessground/types';
-import { dragNewPiece } from 'chessground/drag';
-import { eventPosition, opposite } from 'chessground/util';
+import { MouchEvent, NumberPair } from 'takground/types';
+import { dragNewPiece } from 'takground/drag';
+import { eventPosition, opposite } from 'takground/util';
 import { Rules } from 'chessops/types';
 import { parseFen, EMPTY_FEN } from 'chessops/fen';
 import modal from 'common/modal';
@@ -358,7 +358,7 @@ let lastTouchMovePos: NumberPair | undefined;
 function sparePieces(ctrl: EditorCtrl, color: Color, _orientation: Color, position: 'top' | 'bottom'): VNode {
   const selectedClass = selectedToClass(ctrl.selected());
 
-  const pieces = ['king', 'queen', 'rook', 'bishop', 'knight', 'pawn'].map(function (role) {
+  const pieces = ['king', 'queen', 'rook', 'bishop', 'knight', 'pawn', 'flatstone', 'capstone', 'wallstone'].map(function (role) {
     return [color, role];
   });
 
