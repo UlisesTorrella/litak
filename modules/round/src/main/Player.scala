@@ -26,20 +26,17 @@ final private class Player(
   )(implicit proxy: GameProxy): Fu[Events] =
     play match {
       case HumanPlay(_, uci, blur, lag, _) =>{
-        logger.info(s"NO ULISES")
         pov match {
           case Pov(game, _) if game.turns > Game.maxPlies =>
             round ! TooManyPlies
             fuccess(Nil)
           case Pov(game, color) if game playableBy color =>{
-            logger.info(s"YES ULISES")
             applyUci(game, uci, blur, lag)
               .leftMap(e => s"$pov $e")
               .fold(errs => fufail(ClientError(errs)), fuccess)
               .flatMap {
                 case Flagged => finisher.outOfTime(game)
                 case MoveApplied(progress, moveOrDrop) =>{
-                    logger.warn(s"Player moved applied ULISES")
                     proxy.save(progress) >>
                       postHumanOrBotPlay(round, pov, progress, moveOrDrop)
                   }
@@ -78,7 +75,6 @@ final private class Player(
       progress: Progress,
       moveOrDrop: MoveOrDrop
   )(implicit proxy: GameProxy): Fu[Events] = {
-    logger.warn(s"Player posthuman play ULISES")
     if (pov.game.hasAi) uciMemo.add(pov.game, moveOrDrop)
     notifyMove(moveOrDrop, progress.game)
     if (progress.game.finished) moveFinish(progress.game) dmap { progress.events ::: _ }
@@ -134,20 +130,15 @@ final private class Player(
           ncg -> (Left(move): MoveOrDrop)
         }
       case Uci.Drop(role, pos) =>{
-        logger.warn(s"Player applyUCI drop ULISES $role $pos $metrics")
-        val drop = game.chess.drop(role, pos, metrics) map {
+        game.chess.drop(role, pos, metrics) map {
           case (ncg, drop) =>{
-            logger.warn(s"Chess drop returned ULISES")
             ncg -> (Right(drop): MoveOrDrop)
           }
         }
-        logger.warn(s"Player applied drop ULISES")
-        drop
       }
     }).map {
       case (ncg, _) if ncg.clock.exists(_.outOfTime(game.turnColor, withGrace = false)) => Flagged
       case (newChessGame, moveOrDrop) =>{
-        logger.warn(s"Player appliedUCI end ULISES")
         MoveApplied(
           game.update(newChessGame, moveOrDrop, blur),
           moveOrDrop

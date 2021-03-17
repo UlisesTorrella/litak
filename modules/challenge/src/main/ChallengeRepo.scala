@@ -86,7 +86,7 @@ final private class ChallengeRepo(colls: ChallengeColls, maxPerUser: Max)(implic
     )
     coll
       .find(selector)
-      .hint(coll hint $doc("seenAt" -> 1)) // partial index
+      //.hint(coll hint $doc("seenAt" -> 1)) // partial index Commented because it was giving me headhache
       .cursor[Challenge]()
       .list(max)
       .recoverWith { case _: reactivemongo.core.errors.DatabaseException =>

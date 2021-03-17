@@ -93,7 +93,6 @@ final class RoundSocket(
   )
 
   private def tellRound(gameId: Game.Id, msg: Any): Unit = {
-    logger.warn(s"telling round ULISES")
     rounds.tell(gameId.value, msg)
   }
 
@@ -352,7 +351,6 @@ object RoundSocket {
           } foreach flags.+=
         if (e.troll) flags += 't'
         if (flags.isEmpty) flags += '-'
-        logger.warn(s"r/ver $roomId $version $flags ${e.typ} ${e.data} ULISES")
         s"r/ver $roomId $version $flags ${e.typ} ${e.data}"
       }
 

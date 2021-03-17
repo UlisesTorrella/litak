@@ -164,19 +164,19 @@ final class GameRepo(val coll: Coll)(implicit ec: scala.concurrent.ExecutionCont
       .void
 
   def update(progress: Progress): Funit ={
-      logger.warn(s"GAMEREPO update")
+      logger.warn(s"GAMEREPO update $progress")
       saveDiff(progress.origin, GameDiff(progress.origin, progress.game))
   }
   private def saveDiff(origin: Game, diff: GameDiff.Diff): Funit =
     diff match {
       case (Nil, Nil) => funit
-      case (sets, unsets) =>
+      case (sets, unsets) =>{
         coll.update
           .one(
             $id(origin.id),
             nonEmptyMod("$set", $doc(sets)) ++ nonEmptyMod("$unset", $doc(unsets))
           )
-          .void
+          .void}
     }
 
   private def nonEmptyMod(mod: String, doc: Bdoc) =

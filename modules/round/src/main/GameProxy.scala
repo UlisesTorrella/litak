@@ -19,7 +19,6 @@ final private class GameProxy(
   private[round] def game: Fu[Option[Game]] = cache
 
   def save(progress: Progress): Funit = {
-    logger.warn(s"GAMEPROXY saving progress ULISES")
     set(progress.game)
     dirtyProgress = dirtyProgress.fold(progress.dropEvents)(_ withGame progress.game).some
     if (shouldFlushProgress(progress)) flushProgress()
@@ -91,7 +90,6 @@ final private class GameProxy(
 
   private def flushProgress(): Funit = {
     scheduledFlush.cancel()
-    logger.warn(s"GAMEPROXY flushing progress ULISES")
     dirtyProgress ?? gameRepo.update addEffect { _ =>
       dirtyProgress = none
     }

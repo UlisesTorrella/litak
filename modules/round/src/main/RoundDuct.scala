@@ -494,10 +494,8 @@ final private[round] class RoundDuct(
     }
 
   private def handle(playerId: PlayerId)(op: Pov => Fu[Events]): Funit ={
-    logger.warn(s"RoundDuct handle (ULISES)")
     proxy.withPov(playerId) {
       _ ?? { pov =>{
-          logger.warn(s"PERO ACA SI LLEGA (ULISES)")
           handleAndPublish(op(pov))
         }
       }
@@ -510,8 +508,7 @@ final private[round] class RoundDuct(
     }
 
   private def handleAndPublish(events: Fu[Events]): Funit ={
-    logger.warn(s"RoundDuct handle and publish (ULISES)")
-    events dmap publish recover errorHandler("handle")
+    events dmap publish //recover errorHandler("handle")
   }
 
   private def handleAi(op: Pov => Fu[Events]): Funit =
@@ -523,11 +520,9 @@ final private[round] class RoundDuct(
 
   private def publish[A](events: Events): Unit =
     if (events.nonEmpty) {
-      logger.warn(s"RoundDuct about to publish ULISES")
       events foreach { e =>
         version = version.inc
         socketSend {
-          logger.warn(s"before the problem ulises")
           Protocol.Out.tellVersion(roomId, version, e)
         }
       }
