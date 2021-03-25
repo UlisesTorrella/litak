@@ -51,8 +51,7 @@ final class GifExport(
       "black"       -> Namer.playerTextBlocking(game.blackPlayer, withRating = true)(lightUserApi.sync),
       "orientation" -> game.naturalOrientation.name
     ) ::: List(
-      game.lastMoveKeys.map { "lastMove" -> _ },
-      game.situation.checkSquare.map { "check" -> _.key }
+      game.lastMoveKeys.map { "lastMove" -> _ }
     ).flatten
 
     lightUserApi preloadMany game.userIds flatMap { _ =>
@@ -136,6 +135,5 @@ final class GifExport(
         "fen"      -> (Forsyth >> situation),
         "lastMove" -> uci.map(_.uci)
       )
-      .add("check", situation.checkSquare.map(_.key))
       .add("delay", delay.map(_.centis))
 }

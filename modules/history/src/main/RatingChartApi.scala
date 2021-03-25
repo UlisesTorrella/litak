@@ -50,13 +50,6 @@ final class RatingChartApi(
                 Rapid,
                 Classical,
                 Correspondence,
-                Chess960,
-                KingOfTheHill,
-                ThreeCheck,
-                Antichess,
-                Atomic,
-                Horde,
-                RacingKings,
                 Crazyhouse,
                 Puzzle,
                 UltraBullet

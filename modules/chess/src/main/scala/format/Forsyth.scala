@@ -3,6 +3,7 @@ package format
 
 import cats.implicits._
 import variant.{ Standard, Variant }
+import scala.collection.mutable.Stack
 
 /** Transform a game to standard Forsyth Edwards Notation
   * http://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation
@@ -13,7 +14,7 @@ import variant.{ Standard, Variant }
   */
 object Forsyth {
 
-  val initial = FEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+  val initial = FEN("8/8/8/8/8/8/8/8/FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFCCWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWffffffffffffffffffffffffffffffffffffffffffffffffffccwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww w - 0 1")
 
   def <<@(variant: Variant, fen: FEN): Option[Situation] =
     makeBoard(variant, fen) map { board =>
@@ -21,7 +22,6 @@ object Forsyth {
       val colorOption = splitted lift 1 flatMap (_ lift 0) flatMap Color.apply
       val situation = colorOption match {
         case Some(color)             => Situation(board, color)
-        case _ if board.check(Black) => Situation(board, Black) // user in check will move first
         case _                       => Situation(board, White)
       }
       splitted
@@ -45,14 +45,9 @@ object Forsyth {
               lastMove = lastMove,
               positionHashes = Array.empty
             )
-            val checkCount =
-              splitted
-                .lift(4)
-                .flatMap(makeCheckCount)
-                .orElse(splitted.lift(6).flatMap(makeCheckCount))
-            checkCount.fold(history)(history.withCheckCount)
+            history
           }
-        } fixCastles
+        }
     }
 
   def <<(fen: FEN): Option[Situation] = <<@(Standard, fen)
@@ -124,7 +119,7 @@ object Forsyth {
       chars: List[Char],
       x: Int,
       y: Int
-  ): Option[(List[(Pos, Piece)])] =
+  ): Option[(List[(Pos, Stack[Piece])])] =
     chars match {
       case Nil                               => Option((Nil))
       case '/' :: rest                       => makePiecesWithCrazyPromoted(rest, 0, y - 1)
@@ -134,13 +129,13 @@ object Forsyth {
           pos                        <- Pos.at(x, y)
           piece                      <- Piece.fromChar(c)
           (nextPieces) <- makePiecesWithCrazyPromoted(rest, x + 1, y)
-        } yield (pos -> piece :: nextPieces)
+        } yield (pos -> Stack(piece) :: nextPieces)
       case c :: rest =>
         for {
           pos                        <- Pos.at(x,y )
           piece                      <- Piece.fromChar(c)
           (nextPieces) <- makePiecesWithCrazyPromoted(rest, x + 1, y)
-        } yield (pos -> piece :: nextPieces)
+        } yield (pos -> Stack(piece) :: nextPieces)
     }
 
   def >>(situation: Situation): FEN = >>(SituationPlus(situation, 1))
@@ -158,10 +153,7 @@ object Forsyth {
         game.situation.enPassantSquare.map(_.toString).getOrElse("-"),
         game.halfMoveClock,
         game.fullMoveNumber
-      ) ::: {
-        if (game.board.variant == variant.ThreeCheck) List(exportCheckCount(game.board))
-        else List()
-      }
+      )
     } mkString " "
   }
 

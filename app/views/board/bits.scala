@@ -14,7 +14,7 @@ object bits {
   private val dataState = attr("data-state")
 
   private def miniOrientation(pov: Pov): chess.Color =
-    if (pov.game.variant == chess.variant.RacingKings) chess.White else pov.player.color
+    pov.player.color
 
   def mini(pov: Pov): Tag => Tag =
     mini(
@@ -40,12 +40,6 @@ object bits {
       "fen"     -> fen.value.split(" ").take(4).mkString(" "),
       "baseUrl" -> s"$netBaseUrl${routes.Editor.load("")}",
       "color"   -> sit.color.letter.toString,
-      "castles" -> Json.obj(
-        "K" -> (sit canCastle chess.White on chess.KingSide),
-        "Q" -> (sit canCastle chess.White on chess.QueenSide),
-        "k" -> (sit canCastle chess.Black on chess.KingSide),
-        "q" -> (sit canCastle chess.Black on chess.QueenSide)
-      ),
       "animation" -> Json.obj("duration" -> ctx.pref.animationMillis),
       "is3d"      -> ctx.pref.is3d,
       "i18n"      -> i18nJsObject(i18nKeyes)

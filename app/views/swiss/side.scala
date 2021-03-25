@@ -31,8 +31,7 @@ object side {
               if (s.variant.exotic) {
                 views.html.game.bits.variantLink(
                   s.variant,
-                  if (s.variant == chess.variant.KingOfTheHill) s.variant.shortName
-                  else s.variant.name
+                  s.variant.name
                 )
               } else s.perfType.trans,
               separator,

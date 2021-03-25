@@ -21,11 +21,11 @@ case class AnaMove(
     fen: FEN,
     path: String,
     chapterId: Option[String],
-    promotion: Option[chess.PromotableRole]
+    stackIndex: Int
 ) extends AnaAny {
 
   def branch: Validated[String, Branch] =
-    chess.Game(variant.some, fen.some)(orig, dest, promotion) flatMap { case (game, move) =>
+    chess.Game(variant.some, fen.some)(orig, dest, stackIndex) flatMap { case (game, move) =>
       game.pgnMoves.lastOption toValid "Moved but no last move!" map { san =>
         val uci     = Uci(move)
         val movable = game.situation playable false
@@ -60,6 +60,6 @@ object AnaMove {
       fen = fen,
       path = path,
       chapterId = d str "ch",
-      promotion = d str "promotion" flatMap chess.Role.promotable
+      stackIndex = d int "stackIndex" getOrElse 0
     )
 }

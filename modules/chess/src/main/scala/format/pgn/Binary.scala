@@ -68,9 +68,6 @@ object Binary {
       if (bitAt(b2, 2)) drop(b1, b2)
       else
         pieceStrs(b2 >> 5) match {
-          case castle @ ("O-O" | "O-O-O") =>
-            val check = checkStrs(cut(b2, 5, 3))
-            s"$castle$check"
           case piece =>
             val pos     = posString(right(b1, 6))
             val capture = if (bitAt(b2, 3)) "x" else ""

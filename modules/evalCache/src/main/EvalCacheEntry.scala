@@ -116,10 +116,7 @@ object EvalCacheEntry {
       val base = fen.value.split(' ').take(4).mkString("").filter { c =>
         c != '/' && c != '-' && c != 'w'
       }
-      val str = variant match {
-        case chess.variant.ThreeCheck => base + ~fen.value.split(' ').lift(6)
-        case _                        => base
-      }
+      val str = base
       new SmallFen(str)
     }
     def validate(variant: Variant, fen: FEN): Option[SmallFen] =

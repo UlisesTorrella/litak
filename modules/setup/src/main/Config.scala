@@ -102,28 +102,16 @@ trait Positional { self: Config =>
 object Config extends BaseConfig
 
 trait BaseConfig {
-  val variants       = List(chess.variant.Standard.id, chess.variant.Chess960.id)
+  val variants       = List(chess.variant.Standard.id)
   val variantDefault = chess.variant.Standard
 
   val variantsWithFen = variants :+ FromPosition.id
   val aiVariants = variants :+
     chess.variant.Crazyhouse.id :+
-    chess.variant.KingOfTheHill.id :+
-    chess.variant.ThreeCheck.id :+
-    chess.variant.Antichess.id :+
-    chess.variant.Atomic.id :+
-    chess.variant.Horde.id :+
-    chess.variant.RacingKings.id :+
     chess.variant.FromPosition.id
   val variantsWithVariants =
     variants :+
-      chess.variant.Crazyhouse.id :+
-      chess.variant.KingOfTheHill.id :+
-      chess.variant.ThreeCheck.id :+
-      chess.variant.Antichess.id :+
-      chess.variant.Atomic.id :+
-      chess.variant.Horde.id :+
-      chess.variant.RacingKings.id
+      chess.variant.Crazyhouse.id
   val variantsWithFenAndVariants =
     variantsWithVariants :+ FromPosition.id
 

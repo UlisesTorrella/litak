@@ -3,7 +3,7 @@ package lila.game
 import chess.Color.{ Black, White }
 import chess.format.{ FEN, Uci }
 import chess.variant.{ FromPosition, Standard, Variant }
-import chess.{ Castles, Centis, CheckCount, Clock, Color, Mode, MoveOrDrop, Speed, Status, Game => ChessGame }
+import chess.{ Centis, CheckCount, Clock, Color, Mode, MoveOrDrop, Speed, Status, Game => ChessGame }
 import org.joda.time.DateTime
 
 import lila.common.Sequence
@@ -64,8 +64,7 @@ case class Game(
 
   def opponent(c: Color): Player = player(!c)
 
-  lazy val naturalOrientation =
-    if (variant.racingKings) White else Color.fromWhite(whitePlayer before blackPlayer)
+  lazy val naturalOrientation = Color.fromWhite(whitePlayer before blackPlayer)
 
   def turnColor = chess.player
 
@@ -212,17 +211,9 @@ case class Game(
     val events = moveOrDrop.fold(
       Event.Move(_, game.situation, state, clockEvent, updated.board.crazyData),
       Event.Drop(_, game.situation, state, clockEvent, updated.board.crazyData)
-    ) :: {
-      // abstraction leak, I know.
-      (updated.board.variant.threeCheck && game.situation.check) ?? List(
-        Event.CheckCount(
-          white = updated.history.checkCount.white,
-          black = updated.history.checkCount.black
-        )
-      )
-    }
+    )
 
-    Progress(this, updated, events)
+    Progress(this, updated, events :: Nil)
   }
 
   def lastMoveKeys: Option[String] =
@@ -499,8 +490,7 @@ case class Game(
           case Rapid       => 30
           case _           => 35
         }
-      if (variant.chess960) base * 5 / 4
-      else base
+      base
     }
 
   def expirable =
@@ -634,39 +624,21 @@ object Game {
   val analysableVariants: Set[Variant] = Set(
     chess.variant.Standard,
     chess.variant.Crazyhouse,
-    chess.variant.Chess960,
-    chess.variant.KingOfTheHill,
-    chess.variant.ThreeCheck,
-    chess.variant.Antichess,
     chess.variant.FromPosition,
-    chess.variant.Horde,
-    chess.variant.Atomic,
-    chess.variant.RacingKings
   )
 
   val unanalysableVariants: Set[Variant] = Variant.all.toSet -- analysableVariants
 
-  val variantsWhereWhiteIsBetter: Set[Variant] = Set(
-    chess.variant.ThreeCheck,
-    chess.variant.Atomic,
-    chess.variant.Horde,
-    chess.variant.RacingKings,
-    chess.variant.Antichess
-  )
+  val variantsWhereWhiteIsBetter: Set[Variant] = Set()
 
   val blindModeVariants: Set[Variant] = Set(
     chess.variant.Standard,
-    chess.variant.Chess960,
-    chess.variant.KingOfTheHill,
-    chess.variant.ThreeCheck,
     chess.variant.FromPosition
   )
 
   val hordeWhitePawnsSince = new DateTime(2015, 4, 11, 10, 0)
 
-  def isOldHorde(game: Game) =
-    game.variant == chess.variant.Horde &&
-      game.createdAt.isBefore(Game.hordeWhitePawnsSince)
+  def isOldHorde(game: Game) = false
 
   def allowRated(variant: Variant, clock: Option[Clock.Config]) =
     variant.standard || {
@@ -798,11 +770,11 @@ object Game {
   }
 }
 
-case class CastleLastMove(castles: Castles, lastMove: Option[Uci])
+case class CastleLastMove(lastMove: Option[Uci])
 
 object CastleLastMove {
 
-  def init = CastleLastMove(Castles.all, None)
+  def init = CastleLastMove(None)
 
   import reactivemongo.api.bson._
   import lila.db.ByteArray.ByteArrayBSONHandler

@@ -110,14 +110,6 @@ object Query {
 
   lazy val variantStandard = variant(chess.variant.Standard)
 
-  lazy val notHordeOrSincePawnsAreWhite: Bdoc = $or(
-    F.variant $ne chess.variant.Horde.id,
-    sinceHordePawnsAreWhite
-  )
-
-  lazy val sinceHordePawnsAreWhite: Bdoc =
-    createdSince(Game.hordeWhitePawnsSince)
-
   val notFromPosition: Bdoc =
     F.variant $ne chess.variant.FromPosition.id
 

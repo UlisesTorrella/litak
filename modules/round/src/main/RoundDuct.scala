@@ -526,12 +526,6 @@ final private[round] class RoundDuct(
           Protocol.Out.tellVersion(roomId, version, e)
         }
       }
-      if (
-        events exists {
-          case e: Event.Move => e.threefold
-          case _             => false
-        }
-      ) this ! Threefold
     }
 
   private def errorHandler(name: String): PartialFunction[Throwable, Unit] = {

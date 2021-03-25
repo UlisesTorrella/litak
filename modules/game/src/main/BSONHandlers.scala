@@ -75,7 +75,6 @@ object BSONHandlers {
       val plies         = r int F.turns atMost Game.maxPlies // unlimited can cause StackOverflowError
       val turnColor     = Color.fromPly(plies)
       val createdAt     = r date F.createdAt
-
       val playedPlies = plies - startedAtTurn
       val gameVariant = Variant(r intD F.variant) | chess.variant.Standard
 
@@ -100,10 +99,7 @@ object BSONHandlers {
               lastMove = decoded.lastMove,
               halfMoveClock = decoded.halfMoveClock,
               positionHashes = decoded.positionHashes,
-              checkCount = if (gameVariant.threeCheck) {
-                val counts = r.intsD(F.checkCount)
-                CheckCount(~counts.headOption, ~counts.lastOption)
-              } else Game.emptyCheckCount
+              checkCount = Game.emptyCheckCount
             ),
             variant = gameVariant,
             crazyData = gameVariant.crazyhouse option r.get[Crazyhouse.Data](F.crazyData)
@@ -201,7 +197,6 @@ object BSONHandlers {
             F.castleLastMove -> CastleLastMove.castleLastMoveBSONHandler
               .writeTry(
                 CastleLastMove(
-                  castles = o.history.castles,
                   lastMove = o.history.lastMove
                 )
               )

@@ -30,8 +30,7 @@ object side {
               if (tour.variant.exotic) {
                 views.html.game.bits.variantLink(
                   tour.variant,
-                  if (tour.variant == chess.variant.KingOfTheHill) tour.variant.shortName
-                  else tour.variant.name
+                  tour.variant.name
                 )
               } else tour.perfType.trans,
               tour.position.isDefined ?? s"$separator${trans.thematic.txt()}",

@@ -37,7 +37,7 @@ private object ChallengeJoiner {
     def makeChess(variant: chess.variant.Variant): chess.Game =
       chess.Game(situation = Situation(variant), clock = c.clock.map(_.config.toClock))
 
-    val baseState = c.initialFen.ifTrue(c.variant.fromPosition || c.variant.chess960) flatMap {
+    val baseState = c.initialFen.ifTrue(c.variant.fromPosition) flatMap {
       Forsyth.<<<@(c.variant, _)
     }
     val (chessGame, state) = baseState.fold(makeChess(c.variant) -> none[SituationPlus]) {

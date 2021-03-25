@@ -70,13 +70,6 @@ object side {
         showPerf(u.perfs.correspondence, PerfType.Correspondence),
         br,
         showNonEmptyPerf(u.perfs.crazyhouse, PerfType.Crazyhouse),
-        showNonEmptyPerf(u.perfs.chess960, PerfType.Chess960),
-        showNonEmptyPerf(u.perfs.kingOfTheHill, PerfType.KingOfTheHill),
-        showNonEmptyPerf(u.perfs.threeCheck, PerfType.ThreeCheck),
-        showNonEmptyPerf(u.perfs.antichess, PerfType.Antichess),
-        showNonEmptyPerf(u.perfs.atomic, PerfType.Atomic),
-        showNonEmptyPerf(u.perfs.horde, PerfType.Horde),
-        showNonEmptyPerf(u.perfs.racingKings, PerfType.RacingKings),
         br,
         u.noBot option showPerf(u.perfs.puzzle, PerfType.Puzzle),
         u.noBot option showStorm(u.perfs.storm, u)

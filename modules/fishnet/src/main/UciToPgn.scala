@@ -36,7 +36,7 @@ private object UciToPgn {
         moves <-
           ucis.foldLeft[Validated[String, (Situation, List[Either[Move, Drop]])]](valid(situation -> Nil)) {
             case (Validated.Valid((sit, moves)), uci: Uci.Move) =>
-              sit.move(uci.orig, uci.dest, uci.promotion).leftMap(e => s"ply $ply $e") map { move =>
+              sit.move(uci.orig, uci.dest, uci.i).leftMap(e => s"ply $ply $e") map { move =>
                 move.situationAfter -> (Left(move) :: moves)
               }
             case (Validated.Valid((sit, moves)), uci: Uci.Drop) =>

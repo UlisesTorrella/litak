@@ -111,55 +111,6 @@ object Tv {
           secondsSinceLastMove = 60 * 8,
           filters = Seq(speed(S.Classical), rated(1650), standard, noBot)
         )
-    case object Chess960
-        extends Channel(
-          name = V.Chess960.name,
-          icon = P.Chess960.iconChar.toString,
-          secondsSinceLastMove = freshBlitz,
-          filters = Seq(variant(V.Chess960), noBot)
-        )
-    case object KingOfTheHill
-        extends Channel(
-          name = V.KingOfTheHill.name,
-          icon = P.KingOfTheHill.iconChar.toString,
-          secondsSinceLastMove = freshBlitz,
-          filters = Seq(variant(V.KingOfTheHill), noBot)
-        )
-    case object ThreeCheck
-        extends Channel(
-          name = V.ThreeCheck.name,
-          icon = P.ThreeCheck.iconChar.toString,
-          secondsSinceLastMove = freshBlitz,
-          filters = Seq(variant(V.ThreeCheck), noBot)
-        )
-    case object Antichess
-        extends Channel(
-          name = V.Antichess.name,
-          icon = P.Antichess.iconChar.toString,
-          secondsSinceLastMove = freshBlitz,
-          filters = Seq(variant(V.Antichess), noBot)
-        )
-    case object Atomic
-        extends Channel(
-          name = V.Atomic.name,
-          icon = P.Atomic.iconChar.toString,
-          secondsSinceLastMove = freshBlitz,
-          filters = Seq(variant(V.Atomic), noBot)
-        )
-    case object Horde
-        extends Channel(
-          name = V.Horde.name,
-          icon = P.Horde.iconChar.toString,
-          secondsSinceLastMove = freshBlitz,
-          filters = Seq(variant(V.Horde), noBot)
-        )
-    case object RacingKings
-        extends Channel(
-          name = V.RacingKings.name,
-          icon = P.RacingKings.iconChar.toString,
-          secondsSinceLastMove = freshBlitz,
-          filters = Seq(variant(V.RacingKings), noBot)
-        )
     case object Crazyhouse
         extends Channel(
           name = V.Crazyhouse.name,
@@ -195,13 +146,6 @@ object Tv {
       Rapid,
       Classical,
       Crazyhouse,
-      Chess960,
-      KingOfTheHill,
-      ThreeCheck,
-      Antichess,
-      Atomic,
-      Horde,
-      RacingKings,
       UltraBullet,
       Bot,
       Computer

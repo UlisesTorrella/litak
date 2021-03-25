@@ -1,7 +1,6 @@
 package lila.setup
 
 import chess.format.{ FEN, Forsyth }
-import chess.variant.Chess960
 import chess.variant.FromPosition
 import chess.{ Clock, Speed }
 
@@ -64,8 +63,7 @@ object ApiConfig extends BaseHumanConfig {
     ).autoVariant
 
   def validFen(variant: Variant, fen: Option[FEN]) =
-    if (variant.chess960) fen.forall(f => Chess960.positionNumber(f).isDefined)
-    else if (variant.fromPosition)
+    if (variant.fromPosition)
       fen exists { f =>
         (Forsyth <<< f).exists(_.situation playable false)
       }

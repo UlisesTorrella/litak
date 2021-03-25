@@ -1,0 +1,8 @@
+I'll adapt the chess FEN notation for tak as follow
+
+Only the position description needs to be changed to record stacked stones
+so rows will still be divided by '/', but each row will be as follows
+
+/4(CfFfFFFFff)(F)(C)1/
+an occupied square is represented between brackets and inside the stack is described
+left to right as a FEN row

@@ -330,13 +330,6 @@ object User {
     List(PerfType.Bullet, PerfType.Blitz, PerfType.Rapid, PerfType.Classical, PerfType.Correspondence)
   private val secondRow: List[PerfType] = List(
     PerfType.UltraBullet,
-    PerfType.Crazyhouse,
-    PerfType.Chess960,
-    PerfType.KingOfTheHill,
-    PerfType.ThreeCheck,
-    PerfType.Antichess,
-    PerfType.Atomic,
-    PerfType.Horde,
-    PerfType.RacingKings
+    PerfType.Crazyhouse
   )
 }

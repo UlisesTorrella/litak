@@ -6,23 +6,28 @@ import chess.variant.Variant
 import org.joda.time.DateTime
 import org.lichess.compression.clock.{ Encoder => ClockEncoder }
 import scala.util.Try
-
+import scala.collection.mutable.Stack
 import lila.db.ByteArray
 
 object BinaryFormat {
 
   object pgn {
 
-    def write(moves: PgnMoves): ByteArray =
+    def write(moves: PgnMoves): ByteArray = {
+      lila.log("ULISES").warn(s"writing $moves")
       ByteArray {
         format.pgn.Binary.writeMoves(moves).get
       }
+    }
 
-    def read(ba: ByteArray): PgnMoves =
+    def read(ba: ByteArray): PgnMoves = {
+      lila.log("ULISES").warn(s"reading $ba")
       format.pgn.Binary.readMoves(ba.value.toList).get.toVector
-
-    def read(ba: ByteArray, nb: Int): PgnMoves =
+    }
+    def read(ba: ByteArray, nb: Int): PgnMoves = {
+      lila.log("ULISES").warn(s"reading $ba nb $nb")
       format.pgn.Binary.readMoves(ba.value.toList, nb).get.toVector
+    }
   }
 
   object clockHistory {
@@ -173,17 +178,11 @@ object BinaryFormat {
   object castleLastMove {
 
     def write(clmt: CastleLastMove): ByteArray = {
-
-      val castleInt = clmt.castles.toSeq.zipWithIndex.foldLeft(0) {
-        case (acc, (false, _)) => acc
-        case (acc, (true, p))  => acc + (1 << (3 - p))
-      }
-
       def posInt(pos: Pos): Int = (pos.file.index << 3) + pos.rank.index
       val lastMoveInt = clmt.lastMove.map(_.origDest).fold(0) { case (o, d) =>
         (posInt(o) << 6) + posInt(d)
       }
-      Array((castleInt << 4) + (lastMoveInt >> 8) toByte, lastMoveInt.toByte)
+      Array((lastMoveInt >> 8) toByte, lastMoveInt.toByte)
     }
 
     def read(ba: ByteArray): CastleLastMove = {
@@ -193,7 +192,6 @@ object BinaryFormat {
 
     private def doRead(b1: Int, b2: Int) =
       CastleLastMove(
-        castles = Castles(b1 > 127, (b1 & 64) != 0, (b1 & 32) != 0, (b1 & 16) != 0),
         lastMove = for {
           orig <- Pos.at((b1 & 15) >> 1, ((b1 & 1) << 2) + (b2 >> 6))
           dest <- Pos.at((b2 & 63) >> 3, b2 & 7)
@@ -204,35 +202,88 @@ object BinaryFormat {
 
   object piece {
 
-    private val groupedPos = Pos.all grouped 2 collect { case List(p1, p2) =>
-      (p1, p2)
-    } toArray
+    private val positions: List[Pos] = Pos.all
 
     def write(pieces: PieceMap): ByteArray = {
-      def posInt(pos: Pos): Int =
-        (pieces get pos).fold(0) { piece =>
-          piece.color.fold(0, 8) + roleToInt(piece.role)
+      // If you use more than 32 piece at the same time it will overflow
+      def stackToInt(stack: Stack[Piece]): Int =
+        stack.zipWithIndex.foldLeft(0) { case (z: Int, (piece: Piece, index: Int)) =>
+          piece.color match {
+            case Color.White => (1 << index) + z
+            case _ => z
+          }
         }
-      ByteArray(groupedPos map { case (p1, p2) =>
-        ((posInt(p1) << 4) + posInt(p2)).toByte
-      })
+
+      def posByteArray(stack: Stack[Piece]): Array[Byte] =
+        if (stack isEmpty) Array(0.toByte)
+        else {
+          val n = stack.top.role match {
+            case Capstone => ((stack.size << 1) + 1).toByte
+            case _        => (stack.size << 1).toByte
+          }
+          val z =
+            if (stack.top.role == Flatstone) 0
+            else 1
+          if (stack.size < 8) Array(n, ((z << 7) + stackToInt (stack take 7)).toByte)
+          else Array(n, ((z << 7) + stackToInt (stack take 7)).toByte) ++ (1 to (stack.size/8 + 1)).map { i =>
+                stackToInt(stack.slice(i*8, i*8 + 7)).toByte
+              }
+        }
+
+      ByteArray((positions map { pos: Pos =>
+        posByteArray(pieces getOrElse (pos, Stack[Piece]()))
+      }).toArray.flatten)
     }
 
+    // I'll leave the Variant param for future different sized boards
     def read(ba: ByteArray, variant: Variant): PieceMap = {
-      def splitInts(b: Byte) = {
-        val int = b.toInt
-        Array(int >> 4, int & 0x0f)
+      def byteToStack(b: Byte, from: Int, limit: Int): Stack[Piece] = {
+        val stack = Stack[Piece]()
+        val start = 31 - from
+        val end = start - limit
+        stack.pushAll((end to start).map { i => if ((b << i) < 0) Piece(Color.White, Flatstone) else Piece(Color.Black, Flatstone) })
       }
-      def intPiece(int: Int): Option[Piece] =
-        intToRole(int & 7, variant) map { role =>
-          Piece(Color.fromWhite((int & 8) == 0), role)
+
+      def correctStack(stack: Stack[Piece], header: Byte, firstByte: Byte): Stack[Piece] = {
+        (firstByte, header) match {
+          case (f, h) if f < 0 && h % 2 == 1 => stack.push(Piece(stack.pop().color, Capstone))
+          case (f, h) if f < 0 && h % 2 == 0 => stack.push(Piece(stack.pop().color, Wallstone))
+          case _ => stack
         }
-      val pieceInts = ba.value flatMap splitInts
-      (Pos.all zip pieceInts).view
-        .flatMap { case (pos, int) =>
-          intPiece(int) map (pos -> _)
+      }
+
+      // carefull the piece at the bottom is the reference of type
+      def bytesToStack(a: Array[Byte]): Stack[Piece] = {
+        val n = a(0) >>> 1
+        if (n==0) Stack()
+        else {
+          val rest = n % 8
+          val usefull = n / 8
+          (a.drop(1).dropRight(1)).foldLeft(Stack[Piece]())( (z, b) => z ++ byteToStack(b, 0, 7)) ++ byteToStack(a.last, 0, rest - 1)
         }
-        .to(Map)
+      }
+
+      def splitByPos(a: Array[Byte]): List[Array[Byte]]=
+        a.size match {
+          case 0 => List()
+          case _ => {
+            val n = a(0) >>> 1
+            val (curr, next) = a splitAt (1 + (n.toFloat/8).ceil.toInt) // 1 for the header
+            List(curr) ++ splitByPos(next)
+          }
+        }
+
+      val stacksLists: List[Array[Byte]] = splitByPos(ba.value)
+
+
+      positions.zip(stacksLists.map { bytes =>
+        bytes.size match {
+          case 0 => Stack()
+          case 1 => bytesToStack(bytes)
+          case _ => correctStack(bytesToStack(bytes), bytes(0), bytes(1))
+        }
+      }).toMap
+      Map.empty[Pos, Stack[Piece]]
     }
 
     // cache standard start position
@@ -240,27 +291,17 @@ object BinaryFormat {
 
     private def intToRole(int: Int, variant: Variant): Option[Role] =
       int match {
-        case 6 => Some(Pawn)
-        case 1 => Some(King)
-        case 2 => Some(Queen)
-        case 3 => Some(Rook)
-        case 4 => Some(Knight)
-        case 5 => Some(Bishop)
-        // Legacy from when we used to have an 'Antiking' piece
-        case 7 if variant.antichess => Some(King)
-        case _                      => None
+        case 1 => Some(Flatstone)
+        case 2 => Some(Capstone)
+        case 3 => Some(Wallstone)
+        case _ => None
       }
     private def roleToInt(role: Role): Int =
       role match {
-        case Pawn   => 6
-        case King   => 1
-        case Queen  => 2
-        case Rook   => 3
-        case Knight => 4
-        case Bishop => 5
-        case Flatstone => 6
-        case Capstone => 7
-        case Wallstone => 8
+        case Flatstone => 1
+        case Capstone => 2
+        case Wallstone => 3
+        case _ => 0
       }
   }
 

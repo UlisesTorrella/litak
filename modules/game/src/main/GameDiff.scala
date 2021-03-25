@@ -70,12 +70,6 @@ object GameDiff {
       d(positionHashes, _.history.positionHashes, w.bytes)
       dTry(castleLastMove, makeCastleLastMove, CastleLastMove.castleLastMoveBSONHandler.writeTry)
       // since variants are always OldBin
-      if (a.variant.threeCheck)
-        dOpt(
-          checkCount,
-          _.history.checkCount,
-          (o: CheckCount) => o.nonEmpty ?? { BSONHandlers.checkCountWriter writeOpt o }
-        )
       if (a.variant.crazyhouse)
         dOpt(
           crazyData,
@@ -115,7 +109,6 @@ object GameDiff {
 
   private def makeCastleLastMove(g: Game) =
     CastleLastMove(
-      lastMove = g.history.lastMove,
-      castles = g.history.castles
+      lastMove = g.history.lastMove
     )
 }

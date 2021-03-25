@@ -2,7 +2,7 @@ package lila.game
 
 import chess._
 import chess.format.Uci
-
+import scala.collection.mutable.Stack
 import lila.db.ByteArray
 
 sealed trait PgnStorage
@@ -41,7 +41,7 @@ private object PgnStorage {
         Decoded(
           pgnMoves = decoded.pgnMoves.toVector,
           pieces = decoded.pieces.asScala.view.flatMap { case (k, v) =>
-            chessPos(k).map(_ -> chessPiece(v))
+            chessPos(k).map(_ -> Stack(chessPiece(v))) // temporary
           }.toMap,
           positionHashes = decoded.positionHashes,
           lastMove = Option(decoded.lastUci) flatMap Uci.apply,
@@ -52,9 +52,9 @@ private object PgnStorage {
     private def chessPos(sq: Integer): Option[Pos] = Pos(sq)
     private def chessRole(role: JavaRole): Role =
       role match {
-        case JavaRole.PAWN   => Pawn
-        case JavaRole.KNIGHT => Knight
-        case JavaRole.BISHOP => Bishop
+        case JavaRole.PAWN   => Flatstone //doing this assosiation to avoid messing with more libraries
+        case JavaRole.KNIGHT => Wallstone
+        case JavaRole.BISHOP => Capstone
         case JavaRole.ROOK   => Rook
         case JavaRole.QUEEN  => Queen
         case JavaRole.KING   => King

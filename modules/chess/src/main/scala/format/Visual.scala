@@ -1,6 +1,8 @@
 package chess
 package format
 
+import scala.collection.mutable.Stack
+
 /** r bqkb r
   * p ppp pp
   * pr
@@ -26,7 +28,7 @@ object Visual {
         role   <- Role forsyth c.toLower
       } yield {
         Pos.at(x, 7 - y) map { pos =>
-          pos -> (Color.fromWhite(c isUpper) - role)
+          pos -> Stack((Color.fromWhite(c isUpper) - role))
         }
       }) flatten,
       variant = chess.variant.Variant.default

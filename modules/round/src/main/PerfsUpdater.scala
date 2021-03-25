@@ -28,20 +28,6 @@ final class PerfsUpdater(
             val ratingsB = mkRatings(black.perfs)
             val result   = resultOf(game)
             game.ratingVariant match {
-              case chess.variant.Chess960 =>
-                updateRatings(ratingsW.chess960, ratingsB.chess960, result)
-              case chess.variant.KingOfTheHill =>
-                updateRatings(ratingsW.kingOfTheHill, ratingsB.kingOfTheHill, result)
-              case chess.variant.ThreeCheck =>
-                updateRatings(ratingsW.threeCheck, ratingsB.threeCheck, result)
-              case chess.variant.Antichess =>
-                updateRatings(ratingsW.antichess, ratingsB.antichess, result)
-              case chess.variant.Atomic =>
-                updateRatings(ratingsW.atomic, ratingsB.atomic, result)
-              case chess.variant.Horde =>
-                updateRatings(ratingsW.horde, ratingsB.horde, result)
-              case chess.variant.RacingKings =>
-                updateRatings(ratingsW.racingKings, ratingsB.racingKings, result)
               case chess.variant.Crazyhouse =>
                 updateRatings(ratingsW.crazyhouse, ratingsB.crazyhouse, result)
               case chess.variant.Standard =>
@@ -80,13 +66,6 @@ final class PerfsUpdater(
     }
 
   private case class Ratings(
-      chess960: Rating,
-      kingOfTheHill: Rating,
-      threeCheck: Rating,
-      antichess: Rating,
-      atomic: Rating,
-      horde: Rating,
-      racingKings: Rating,
       crazyhouse: Rating,
       ultraBullet: Rating,
       bullet: Rating,
@@ -98,13 +77,6 @@ final class PerfsUpdater(
 
   private def mkRatings(perfs: Perfs) =
     Ratings(
-      chess960 = perfs.chess960.toRating,
-      kingOfTheHill = perfs.kingOfTheHill.toRating,
-      threeCheck = perfs.threeCheck.toRating,
-      antichess = perfs.antichess.toRating,
-      atomic = perfs.atomic.toRating,
-      horde = perfs.horde.toRating,
-      racingKings = perfs.racingKings.toRating,
       crazyhouse = perfs.crazyhouse.toRating,
       ultraBullet = perfs.ultraBullet.toRating,
       bullet = perfs.bullet.toRating,
@@ -150,14 +122,6 @@ final class PerfsUpdater(
             else p
           } else perf
         val perfs1 = perfs.copy(
-          chess960 = addRatingIf(game.ratingVariant.chess960, perfs.chess960, ratings.chess960),
-          kingOfTheHill =
-            addRatingIf(game.ratingVariant.kingOfTheHill, perfs.kingOfTheHill, ratings.kingOfTheHill),
-          threeCheck = addRatingIf(game.ratingVariant.threeCheck, perfs.threeCheck, ratings.threeCheck),
-          antichess = addRatingIf(game.ratingVariant.antichess, perfs.antichess, ratings.antichess),
-          atomic = addRatingIf(game.ratingVariant.atomic, perfs.atomic, ratings.atomic),
-          horde = addRatingIf(game.ratingVariant.horde, perfs.horde, ratings.horde),
-          racingKings = addRatingIf(game.ratingVariant.racingKings, perfs.racingKings, ratings.racingKings),
           crazyhouse = addRatingIf(game.ratingVariant.crazyhouse, perfs.crazyhouse, ratings.crazyhouse),
           ultraBullet =
             addRatingIf(isStd && speed == Speed.UltraBullet, perfs.ultraBullet, ratings.ultraBullet),
@@ -170,13 +134,6 @@ final class PerfsUpdater(
         )
         val r = RatingRegulator(ratingFactors()) _
         val perfs2 = perfs1.copy(
-          chess960 = r(PT.Chess960, perfs.chess960, perfs1.chess960),
-          kingOfTheHill = r(PT.KingOfTheHill, perfs.kingOfTheHill, perfs1.kingOfTheHill),
-          threeCheck = r(PT.ThreeCheck, perfs.threeCheck, perfs1.threeCheck),
-          antichess = r(PT.Antichess, perfs.antichess, perfs1.antichess),
-          atomic = r(PT.Atomic, perfs.atomic, perfs1.atomic),
-          horde = r(PT.Horde, perfs.horde, perfs1.horde),
-          racingKings = r(PT.RacingKings, perfs.racingKings, perfs1.racingKings),
           crazyhouse = r(PT.Crazyhouse, perfs.crazyhouse, perfs1.crazyhouse),
           bullet = r(PT.Bullet, perfs.bullet, perfs1.bullet),
           blitz = r(PT.Blitz, perfs.blitz, perfs1.blitz),

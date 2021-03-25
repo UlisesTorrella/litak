@@ -91,13 +91,6 @@ final class RankingApi(
       blitz         <- topPerf(PerfType.Blitz.id, nb)
       rapid         <- topPerf(PerfType.Rapid.id, nb)
       classical     <- topPerf(PerfType.Classical.id, nb)
-      chess960      <- topPerf(PerfType.Chess960.id, nb)
-      kingOfTheHill <- topPerf(PerfType.KingOfTheHill.id, nb)
-      threeCheck    <- topPerf(PerfType.ThreeCheck.id, nb)
-      antichess     <- topPerf(PerfType.Antichess.id, nb)
-      atomic        <- topPerf(PerfType.Atomic.id, nb)
-      horde         <- topPerf(PerfType.Horde.id, nb)
-      racingKings   <- topPerf(PerfType.RacingKings.id, nb)
       crazyhouse    <- topPerf(PerfType.Crazyhouse.id, nb)
     } yield Perfs.Leaderboards(
       ultraBullet = ultraBullet,
@@ -105,14 +98,7 @@ final class RankingApi(
       blitz = blitz,
       rapid = rapid,
       classical = classical,
-      crazyhouse = crazyhouse,
-      chess960 = chess960,
-      kingOfTheHill = kingOfTheHill,
-      threeCheck = threeCheck,
-      antichess = antichess,
-      atomic = atomic,
-      horde = horde,
-      racingKings = racingKings
+      crazyhouse = crazyhouse
     )
 
   object weeklyStableRanking {

@@ -75,8 +75,7 @@ final private class SandbagWatch(
 
   private def isSandbag(game: Game): Boolean =
     game.playedTurns <= {
-      if (game.variant == chess.variant.Atomic) 3
-      else 8
+      8
     }
 }
 

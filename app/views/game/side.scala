@@ -50,8 +50,7 @@ object side {
                       if (game.variant.exotic)
                         bits.variantLink(
                           game.variant,
-                          (if (game.variant == chess.variant.KingOfTheHill) game.variant.shortName
-                           else game.variant.name).toUpperCase,
+                          game.variant.name.toUpperCase,
                           initialFen = initialFen
                         )
                       else
@@ -66,8 +65,7 @@ object side {
                       if (game.variant.exotic)
                         bits.variantLink(
                           game.variant,
-                          (if (game.variant == chess.variant.KingOfTheHill) game.variant.shortName
-                           else game.variant.name).toUpperCase,
+                          game.variant.name.toUpperCase,
                           initialFen = initialFen
                         )
                       else
@@ -115,17 +113,6 @@ object side {
             }
           )
         },
-        initialFen
-          .ifTrue(game.variant.chess960)
-          .flatMap {
-            chess.variant.Chess960.positionNumber
-          }
-          .map { number =>
-            st.section(
-              "Chess960 start position: ",
-              strong(number)
-            )
-          },
         userTv.map { u =>
           st.section(cls := "game__tv")(
             h2(cls := "top user-tv text", dataUserTv := u.id, dataIcon := "1")(u.titleUsername)

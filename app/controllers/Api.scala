@@ -156,6 +156,7 @@ final class Api(
 
   def game(id: String) =
     ApiRequest { req =>
+      lila.log("ULISE").warn(s"Api game $id")
       GameRateLimitPerIP(HTTPRequest ipAddress req, cost = 1) {
         lila.mon.api.game.increment(1)
         gameApi.one(id take lila.game.Game.gameIdSize, gameFlagsFromRequest(req)) map toApiResult

@@ -2,7 +2,7 @@ package lila.round
 
 import chess.format.Forsyth
 import chess.variant._
-import chess.{ Game => ChessGame, Board, Color => ChessColor, Castles, Clock, Situation }
+import chess.{ Game => ChessGame, Board, Color => ChessColor, Clock, Situation }
 import ChessColor.{ Black, White }
 import com.github.blemale.scaffeine.Cache
 import lila.memo.CacheApi
@@ -40,8 +40,6 @@ final private class Rematcher(
     .expireAfterWrite(20 minutes)
     .build[Game.ID, Offers]()
 
-  private val chess960 = new ExpireSetMemo(3 hours)
-
   def isOffering(pov: Pov): Boolean = offers.getIfPresent(pov.gameId).exists(_(pov.color))
 
   def yes(pov: Pov): Fu[Events] =
@@ -77,7 +75,6 @@ final private class Rematcher(
           nextGame <- returnGame(pov) map (_.start)
           _ = offers invalidate pov.game.id
           _ = rematches.cache.put(pov.gameId, nextGame.id)
-          _ = if (pov.game.variant == Chess960 && !chess960.get(pov.gameId)) chess960.put(nextGame.id)
           _ <- gameRepo insertDenormalized nextGame
         } yield {
           messenger.system(pov.game, trans.rematchOfferAccepted.txt())
@@ -101,9 +98,6 @@ final private class Rematcher(
       initialFen <- gameRepo initialFen pov.game
       situation = initialFen flatMap Forsyth.<<<
       pieces = pov.game.variant match {
-        case Chess960 =>
-          if (chess960 get pov.gameId) Chess960.pieces
-          else situation.fold(Chess960.pieces)(_.situation.board.pieces)
         case FromPosition => situation.fold(Standard.pieces)(_.situation.board.pieces)
         case variant      => variant.pieces
       }
@@ -111,9 +105,7 @@ final private class Rematcher(
       game <- Game.make(
         chess = ChessGame(
           situation = Situation(
-            board = Board(pieces, variant = pov.game.variant).withCastles {
-              situation.fold(Castles.init)(_.situation.board.history.castles)
-            },
+            board = Board(pieces, variant = pov.game.variant),
             color = situation.fold[chess.Color](White)(_.situation.color)
           ),
           clock = pov.game.clock map { c =>

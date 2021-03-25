@@ -54,7 +54,7 @@ object Divider {
 
   private def majorsAndMinors(board: Board): Int =
     board.pieces.values.foldLeft(0) { (v, p) =>
-      if (p.role == Pawn || p.role == King) v else v + 1
+      if ((p top).role == Pawn || (p top).role == King) v else v + 1
     }
 
   private val backranks =
@@ -110,7 +110,7 @@ object Divider {
   }.toList
 
   private def mixedness(board: Board): Int = {
-    val boardValues = board.pieces.view.mapValues(_ is Color.white)
+    val boardValues = board.pieces.view.mapValues(_.top is Color.white)
     mixednessRegions.foldLeft(0) { case (mix, region) =>
       var white = 0
       var black = 0

@@ -163,10 +163,9 @@ final class GameRepo(val coll: Coll)(implicit ec: scala.concurrent.ExecutionCont
       )
       .void
 
-  def update(progress: Progress): Funit ={
-      logger.warn(s"GAMEREPO update $progress")
-      saveDiff(progress.origin, GameDiff(progress.origin, progress.game))
-  }
+  def update(progress: Progress): Funit =
+    saveDiff(progress.origin, GameDiff(progress.origin, progress.game))
+
   private def saveDiff(origin: Game, diff: GameDiff.Diff): Funit =
     diff match {
       case (Nil, Nil) => funit
@@ -418,7 +417,6 @@ final class GameRepo(val coll: Coll)(implicit ec: scala.concurrent.ExecutionCont
 
   def initialFen(game: Game): Fu[Option[FEN]] =
     if (game.imported || !game.variant.standardInitialPosition) initialFen(game.id) dmap {
-      case None if game.variant == chess.variant.Chess960 => Forsyth.initial.some
       case fen                                            => fen
     }
     else fuccess(none)

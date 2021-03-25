@@ -134,7 +134,7 @@ object TournamentForm {
   val positionDefault = StartingPosition.initial.fen
 
   val validVariants =
-    List(Standard, Chess960, KingOfTheHill, ThreeCheck, Antichess, Atomic, Horde, RacingKings, Crazyhouse)
+    List(Standard, Crazyhouse)
 
   def guessVariant(from: String): Option[Variant] =
     validVariants.find { v =>

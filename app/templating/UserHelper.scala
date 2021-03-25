@@ -20,16 +20,10 @@ trait UserHelper { self: I18nHelper with StringHelper with NumberHelper =>
 
   val topBarSortedPerfTypes: List[PerfType] = List(
     PerfType.Bullet,
-    PerfType.Chess960,
     PerfType.Blitz,
-    PerfType.KingOfTheHill,
     PerfType.Rapid,
-    PerfType.ThreeCheck,
     PerfType.Classical,
-    PerfType.Antichess,
     PerfType.Correspondence,
-    PerfType.Atomic,
-    PerfType.Horde,
     PerfType.Crazyhouse
   )
 

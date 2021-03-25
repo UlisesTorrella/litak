@@ -128,19 +128,11 @@ trait SetupHelper { self: I18nHelper =>
 
   def translatedVariantChoicesWithFen(implicit lang: Lang) =
     translatedVariantChoices :+
-      variantTupleId(chess.variant.Chess960) :+
       variantTupleId(chess.variant.FromPosition)
 
   def translatedAiVariantChoices(implicit lang: Lang) =
     translatedVariantChoices :+
       variantTupleId(chess.variant.Crazyhouse) :+
-      variantTupleId(chess.variant.Chess960) :+
-      variantTupleId(chess.variant.KingOfTheHill) :+
-      variantTupleId(chess.variant.ThreeCheck) :+
-      variantTupleId(chess.variant.Antichess) :+
-      variantTupleId(chess.variant.Atomic) :+
-      variantTupleId(chess.variant.Horde) :+
-      variantTupleId(chess.variant.RacingKings) :+
       variantTupleId(chess.variant.FromPosition)
 
   def translatedVariantChoicesWithVariantsAndFen(implicit lang: Lang) =

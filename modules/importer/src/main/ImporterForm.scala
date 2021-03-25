@@ -69,8 +69,6 @@ case class ImportData(pgn: String, analyse: Option[String]) {
             else chess.variant.Standard
           }
         } match {
-          case chess.variant.Chess960 if !Chess960.isStartPosition(setup.board) =>
-            chess.variant.FromPosition
           case chess.variant.FromPosition if parsed.tags.fen.isEmpty => chess.variant.Standard
           case chess.variant.Standard if fromPosition                => chess.variant.FromPosition
           case v                                                     => v

@@ -94,13 +94,6 @@ object SimulForm {
           number.verifying(
             Set(
               chess.variant.Standard.id,
-              chess.variant.Chess960.id,
-              chess.variant.KingOfTheHill.id,
-              chess.variant.ThreeCheck.id,
-              chess.variant.Antichess.id,
-              chess.variant.Atomic.id,
-              chess.variant.Horde.id,
-              chess.variant.RacingKings.id,
               chess.variant.Crazyhouse.id
             ) contains _
           )

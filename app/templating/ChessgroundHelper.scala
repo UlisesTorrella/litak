@@ -4,6 +4,7 @@ package templating
 import chess.{ Board, Color, Pos }
 import lila.api.Context
 
+import scala.collection.mutable.Stack
 import lila.app.ui.ScalatagsTemplate._
 import lila.game.Pov
 
@@ -21,17 +22,19 @@ trait ChessgroundHelper {
         raw {
           if (ctx.pref.is3d) ""
           else {
-            def top(p: Pos)  = orient.fold(7 - p.rank.index, p.rank.index) * 12.5
+            def top(p: Pos, index: Int)  = orient.fold(7 - p.rank.index, p.rank.index) * 12.5 - index * 20
             def left(p: Pos) = orient.fold(p.file.index, 7 - p.file.index) * 12.5
             val highlights = ctx.pref.highlight ?? lastMove.distinct.map { pos =>
-              s"""<square class="last-move" style="top:${top(pos)}%;left:${left(pos)}%"></square>"""
+              s"""<square class="last-move" style="top:${top(pos, 0)}%;left:${left(pos)}%"></square>"""
             } mkString ""
             val pieces =
               if (ctx.pref.isBlindfold) ""
               else
-                board.pieces.map { case (pos, piece) =>
-                  val klass = s"${piece.color.name} ${piece.role.name}"
-                  s"""<piece class="$klass" style="top:${top(pos)}%;left:${left(pos)}%"></piece>"""
+                board.pieces collect {
+                  case (pos, stack) => { stack.zipWithIndex.foldLeft(""){ case (z, (piece, index)) =>
+                      z ++ s"""<piece class="${piece.color.name} ${piece.role.name}" style="top:${top(pos, index)}%;left:${left(pos)}%"></piece>"""
+                    }
+                  }
                 } mkString ""
             s"$highlights$pieces"
           }
