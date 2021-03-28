@@ -115,6 +115,11 @@ object Forsyth {
     }
   }
 
+  private def stackFromFen(fen: List[Char]): (Stack[Piece], List[Char]) = {
+    val (stackS, rest) = fen splitAt (fen indexOf ')')
+    (Stack[Piece]().pushAll(stackS map { Piece.fromChar(_) } collect { case Some(x) => x}) -> rest)
+  }
+
   private def makePiecesWithCrazyPromoted(
       chars: List[Char],
       x: Int,
@@ -124,18 +129,12 @@ object Forsyth {
       case Nil                               => Option((Nil))
       case '/' :: rest                       => makePiecesWithCrazyPromoted(rest, 0, y - 1)
       case c :: rest if '1' <= c && c <= '8' => makePiecesWithCrazyPromoted(rest, x + (c - '0').toInt, y)
-      case c :: '~' :: rest =>
+      case c :: rest if '(' == c =>
         for {
-          pos                        <- Pos.at(x, y)
-          piece                      <- Piece.fromChar(c)
-          (nextPieces) <- makePiecesWithCrazyPromoted(rest, x + 1, y)
-        } yield (pos -> Stack(piece) :: nextPieces)
-      case c :: rest =>
-        for {
-          pos                        <- Pos.at(x,y )
-          piece                      <- Piece.fromChar(c)
-          (nextPieces) <- makePiecesWithCrazyPromoted(rest, x + 1, y)
-        } yield (pos -> Stack(piece) :: nextPieces)
+          pos                <- Pos.at(x,y )
+          (stack, leftOvers) = stackFromFen(rest) //Piece.fromChar(c)
+          nextStacks         <- makePiecesWithCrazyPromoted(leftOvers, x + 1, y)
+        } yield ((pos -> stack) :: nextStacks)
     }
 
   def >>(situation: Situation): FEN = >>(SituationPlus(situation, 1))
@@ -180,6 +179,9 @@ object Forsyth {
 
   implicit private val posOrdering = Ordering.by[Pos, File](_.file)
 
+  def exportStack(stack: Stack[Piece]): String =
+    stack.foldLeft("(")( (z, p) => z+p.forsyth.toString) + ")"
+
   def exportBoard(board: Board): String = {
     val fen   = new scala.collection.mutable.StringBuilder(70)
     var empty = 0
@@ -188,12 +190,15 @@ object Forsyth {
       for (x <- File.all) {
         board(x, y) match {
           case None => empty = empty + 1
-          case Some(piece) =>
-            if (empty == 0) fen append piece.forsyth.toString
-            else {
-              fen append (empty.toString + piece.forsyth)
-              empty = 0
-            }
+          case Some(stack) => stack match {
+            case Stack() => empty = empty + 1
+            case _ => if (empty == 0) fen append (exportStack(stack)) // piece.forsyth.toString
+                      else {
+                        fen append (empty.toString + exportStack(stack))
+                        empty = 0
+                      }
+          }
+
         }
       }
       if (empty > 0) fen append empty

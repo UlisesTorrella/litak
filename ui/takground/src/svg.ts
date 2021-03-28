@@ -26,6 +26,7 @@ export function renderSvg(state: State, root: SVGElement): void {
     arrowDests: ArrowDests = new Map(),
     bounds = state.dom.bounds();
 
+  console.log(d.shapes);
   for (const s of d.shapes.concat(d.autoShapes).concat(cur ? [cur] : [])) {
     if (s.dest) arrowDests.set(s.dest, (arrowDests.get(s.dest) || 0) + 1);
   }
@@ -248,7 +249,7 @@ function renderArrow(
   });
 }
 
-function renderPiece(baseUrl: string, pos: cg.Pos, piece: DrawShapePiece, bounds: ClientRect): SVGElement {
+function renderPiece(baseUrl: string, pos: cg.Pos, piece: DrawShapePiece, bounds: ClientRect): SVGElement { // TODO Show stacked
   const o = pos2px(pos, bounds),
     size = (bounds.width / 8) * (piece.scale || 1),
     name = piece.color[0] + (piece.role === 'knight' ? 'n' : piece.role[0]).toUpperCase();

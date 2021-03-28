@@ -123,7 +123,7 @@ function step(state: State, now: DOMHighResTimeStamp): void {
 function animate<A>(mutation: Mutation<A>, state: State): A {
   // clone state before mutating it
   const prevPieces: cg.Pieces = new Map(state.pieces);
-
+  console.log(prevPieces)
   const result = mutation(state);
   const plan = computePlan(prevPieces, state);
   if (plan.anims.size || plan.fadings.size) {

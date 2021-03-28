@@ -111,7 +111,7 @@ abstract class Variant private[variant] (
 
   /** Once a move has been decided upon from the available legal moves, the board is finalized
     */
-  @nowarn def finalizeBoard(board: Board, uci: format.Uci, captured: Option[Piece]): Board = board
+  @nowarn def finalizeBoard(board: Board, uci: format.Uci): Board = board
 
   def valid(board: Board, strict: Boolean) = true
 

@@ -39,8 +39,7 @@ case object Crazyhouse
 
   override def isIrreversible(move: Move): Boolean = false
 
-  override def finalizeBoard(board: Board, uci: Uci, capture: Option[Piece]): Board =
-    board
+  override def finalizeBoard(board: Board, uci: Uci): Board = board
 
   // Checkmate here means a path has been stablished
   override def checkmate(situation: Situation) = situation.board hasPath !situation.color

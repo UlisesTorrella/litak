@@ -97,12 +97,29 @@ export function baseMove(state: HeadlessState, orig: cg.Key, dest: cg.Key): cg.P
   const origPiece = state.pieces.get(orig),
     destPiece = state.pieces.get(dest);
   if (orig === dest || !origPiece) return false;
-  const captured = destPiece && destPiece.color !== origPiece.color ? destPiece : undefined;
+  const captured = destPiece;
   if (dest === state.selected) unselect(state);
   callUserFunction(state.events.move, orig, dest, captured);
   if (!tryAutoCastle(state, orig, dest)) {
-    state.pieces.set(dest, origPiece);
-    state.pieces.delete(orig);
+    if (origPiece.bellow && origPiece.bellow.length > 0) {
+      let newTop = origPiece.bellow.shift()!;
+      newTop.bellow = origPiece.bellow.splice(0); // affects the piece that will be place on dest
+      console.log("setting top :");
+      console.log(newTop);
+      state.pieces.set(orig, newTop);
+    }
+    else {
+      state.pieces.delete(orig);
+    }
+    if (destPiece) {
+      let piece = origPiece;
+      piece.bellow = (piece.bellow ?? []).concat([destPiece].concat(destPiece.bellow ?? []))
+      state.pieces.set(dest, piece);
+    }
+    else {
+      state.pieces.set(dest, origPiece);
+    }
+    //state.pieces.delete(orig); TODO: if orig stack is empty delete
   }
   state.lastMove = [orig, dest];
   state.check = undefined;

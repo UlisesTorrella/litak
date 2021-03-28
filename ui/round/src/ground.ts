@@ -47,7 +47,7 @@ export function makeConfig(ctrl: RoundController): Config {
       },
     },
     animation: {
-      enabled: true,
+      enabled: false//true, No animations until I make this work
       duration: data.pref.animationDuration,
     },
     premovable: {

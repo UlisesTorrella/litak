@@ -50,19 +50,19 @@ export const distanceSq = (pos1: cg.Pos, pos2: cg.Pos): number => {
 
 export const samePiece = (p1: cg.Piece, p2: cg.Piece): boolean => p1.role === p2.role && p1.color === p2.color;
 
-const posToTranslateBase = (pos: cg.Pos, asWhite: boolean, xFactor: number, yFactor: number): cg.NumberPair => [
+const posToTranslateBase = (pos: cg.Pos, asWhite: boolean, xFactor: number, yFactor: number, index?: number): cg.NumberPair => [
   (asWhite ? pos[0] : 7 - pos[0]) * xFactor,
-  (asWhite ? 7 - pos[1] : pos[1]) * yFactor,
+  (asWhite ? 7 - pos[1] : pos[1]) * yFactor + (index ? index + 1 : 0) * 5,
 ];
 
-export const posToTranslateAbs = (bounds: ClientRect): ((pos: cg.Pos, asWhite: boolean) => cg.NumberPair) => {
+export const posToTranslateAbs = (bounds: ClientRect): ((pos: cg.Pos, asWhite: boolean, index?: number) => cg.NumberPair) => {
   const xFactor = bounds.width / 8,
     yFactor = bounds.height / 8;
-  return (pos, asWhite) => posToTranslateBase(pos, asWhite, xFactor, yFactor);
+  return (pos, asWhite, index) => posToTranslateBase(pos, asWhite, xFactor, yFactor, index);
 };
 
-export const posToTranslateRel = (pos: cg.Pos, asWhite: boolean): cg.NumberPair =>
-  posToTranslateBase(pos, asWhite, 100, 100);
+export const posToTranslateRel = (pos: cg.Pos, asWhite: boolean, index?: number): cg.NumberPair =>
+  posToTranslateBase(pos, asWhite, 100, 100, index);
 
 export const translateAbs = (el: HTMLElement, pos: cg.NumberPair): void => {
   el.style.transform = `translate(${pos[0]}px,${pos[1]}px)`;

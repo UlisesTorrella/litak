@@ -44,16 +44,16 @@ function king(color: cg.Color, rookFiles: number[], canCastle: boolean): Mobilit
         rookFiles.includes(x2)));
 }
 
-export const wallstone: Mobility = (x1, y1, x2, y2) => {
-  return (diff(x1, x2) < 2 && diff(y1, y2) < 2);
+export const flatstone: Mobility = (x1, y1, x2, y2) => {
+  return (diff(x1, x2) < 2 && diff(y1, y2) == 0 || diff(x1, x2) == 0 && diff(y1, y2) < 2);
 }
 
 export const capstone: Mobility = (x1, y1, x2, y2) => {
-  return (diff(x1, x2) < 2 && diff(y1, y2) < 2);
+  return flatstone(x1, y1, x2, y2);
 }
 
-export const flatstone: Mobility = (x1, y1, x2, y2) => {
-  return (diff(x1, x2) < 2 && diff(y1, y2) < 2);
+export const wallstone: Mobility = (x1, y1, x2, y2) => {
+  return flatstone(x1, y1, x2, y2);
 }
 
 function rookFilesOf(pieces: cg.Pieces, color: cg.Color) {

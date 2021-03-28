@@ -173,10 +173,7 @@ export default class RoundController {
 
   private onMove = (_: cg.Key, dest: cg.Key, captured?: cg.Piece) => {
     if (captured) {
-      if (this.data.game.variant.key === 'atomic') {
-        sound.explode();
-        atomic.capture(this, dest);
-      } else sound.capture();
+      sound.capture();
     } else sound.move();
   };
 

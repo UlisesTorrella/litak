@@ -20,11 +20,11 @@ object Binary {
 
   private object Encoding {
     val pieceInts: Map[String, Int] =
-      Map("K" -> 1, "Q" -> 2, "R" -> 3, "N" -> 4, "B" -> 5, "O-O" -> 6, "O-O-O" -> 7, "F" -> 8, "C" -> 9, "W" -> 10)
+      Map("F" -> 1, "C" -> 2, "W" -> 3)
     val pieceStrs: Map[Int, String]     = pieceInts map { case (k, v) => v -> k }
-    val dropPieceInts: Map[String, Int] = Map("P" -> 1, "Q" -> 2, "R" -> 3, "N" -> 4, "B" -> 5, "F" -> 6, "C" -> 7, "W" -> 8)
+    val dropPieceInts: Map[String, Int] = Map("F" -> 1, "C" -> 2, "W" -> 3)
     val dropPieceStrs: Map[Int, String] = dropPieceInts map { case (k, v) => v -> k }
-    val promotionInts: Map[String, Int] = Map("" -> 0, "Q" -> 1, "R" -> 2, "N" -> 3, "B" -> 4, "K" -> 6)
+    val promotionInts: Map[String, Int] = Map("" -> 0, "F" -> 1, "C" -> 2, "W" -> 3, "B" -> 4, "K" -> 6)
     val promotionStrs: Map[Int, String] = promotionInts map { case (k, v) => v -> k }
     val checkInts: Map[String, Int]     = Map("" -> 0, "+" -> 1, "#" -> 2)
     val checkStrs: Map[Int, String]     = checkInts map { case (k, v) => v -> k }
@@ -199,18 +199,18 @@ object Binary {
         if (file.head < pos.head) 1 else 2
       }
 
-    val pieceR       = "([KQRNBFCW])"
+    val pieceR       = "([FCW])"
     val fileR        = "(?:([a-h])x)?"
     val posR         = "([a-h][1-9])"
     val captureR     = "(x?)"
     val checkR       = "([\\+#]?)"
-    val promotionR   = "(?:\\=?([QRNBKFCW]))?"
+    val promotionR   = "(?:\\=?([FCW]))?"
     val origR        = "([a-h]?[1-8]?)".r
     val SimplePieceR = s"^$pieceR$captureR$posR$checkR$$".r
     val FullPawnR    = s"^$fileR$posR$promotionR$checkR$$".r
     val CastlingR    = s"^(O-O|O-O-O)$checkR$$".r
     val FullPieceR   = s"^$pieceR$origR$captureR$posR$checkR$$".r
-    val DropR        = s"^([QRNBPFCW])@$posR$checkR$$".r
+    val DropR        = s"^([FCW])@$posR$checkR$$".r
   }
 
   @inline private def toInt(b: Byte): Int = b & 0xff

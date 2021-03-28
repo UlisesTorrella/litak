@@ -27,9 +27,9 @@ final case class Actor(
       case Queen => longRange(Queen.dirs)
 
       case King               => shortRange(King.dirs)
-      case Capstone           => shortRange(King.dirs)
-      case Flatstone          => shortRange(King.dirs)
-      case Wallstone          => shortRange(King.dirs)
+      case Capstone           => shortRange(Flatstone.dirs)
+      case Flatstone          => shortRange(Flatstone.dirs)
+      case Wallstone          => shortRange(Flatstone.dirs)
     }
 
     // We apply the current game variant's effects if there are any so that we can accurately decide if the king would
@@ -51,6 +51,7 @@ final case class Actor(
         case Some(stack) => stack match {
           case Stack(p, _*) => if (p.role == Flatstone) board.move(pos, to) map { move(to, _) }
                                else Nil
+          case Stack() => board.move(pos, to) map { move(to, _) }
           case _ => Nil
         }
       }

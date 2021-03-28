@@ -18,4 +18,16 @@ object boardTest {
       case None => false
     }
 
+  def isTheStoneStacking =
+    board.move(Pos.A4, Pos.A5) match {
+      case Some(board) => board.pieces.get(Pos.A5) match {
+        case Some(Stack(w, b)) => {
+          println(s"stack: $w, $b")
+          true
+        }
+        case _ => false
+      }
+      case None => false
+    }
+
 }

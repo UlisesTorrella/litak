@@ -31,7 +31,7 @@ case class Move(
       )
     }
 
-    board.variant.finalizeBoard(board, toUci, capture flatMap before.apply) updateHistory { h =>
+    board.variant.finalizeBoard(board, toUci) updateHistory { h =>
       lazy val positionHashesOfSituationBefore =
         if (h.positionHashes.isEmpty) Hash(situationBefore) else h.positionHashes
       val resetsPositionHashes = board.variant.isIrreversible(this)

@@ -22,7 +22,7 @@ trait ChessgroundHelper {
         raw {
           if (ctx.pref.is3d) ""
           else {
-            def top(p: Pos, index: Int)  = orient.fold(7 - p.rank.index, p.rank.index) * 12.5 - index * 20
+            def top(p: Pos, index: Int = 0)  = orient.fold(7 - p.rank.index, p.rank.index) * 12.5 - index * 5
             def left(p: Pos) = orient.fold(p.file.index, 7 - p.file.index) * 12.5
             val highlights = ctx.pref.highlight ?? lastMove.distinct.map { pos =>
               s"""<square class="last-move" style="top:${top(pos, 0)}%;left:${left(pos)}%"></square>"""
@@ -32,7 +32,7 @@ trait ChessgroundHelper {
               else
                 board.pieces collect {
                   case (pos, stack) => { stack.zipWithIndex.foldLeft(""){ case (z, (piece, index)) =>
-                      z ++ s"""<piece class="${piece.color.name} ${piece.role.name}" style="top:${top(pos, index)}%;left:${left(pos)}%"></piece>"""
+                      z ++ s"""<piece class="${piece.color.name} ${piece.role.name}" style="top:${top(pos, index)}%;left:${left(pos)}%">Info</piece>"""
                     }
                   }
                 } mkString ""

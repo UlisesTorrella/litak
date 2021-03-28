@@ -25,7 +25,7 @@ export function render(s: State): void {
     squares: SquareClasses = computeSquareClasses(s),
     samePieces: Set<cg.Key> = new Set(),
     sameSquares: Set<cg.Key> = new Set(),
-    movedPieces: Map<PieceName, cg.PieceNode[]> = new Map(),
+    movedPieces: Map<PieceName, cg.PieceNode[]> = new Map(), // pieceName is not enough to identify
     movedSquares: Map<string, cg.SquareNode[]> = new Map(); // by class name
   let k: cg.Key,
     el: cg.PieceNode | cg.SquareNode | undefined,
@@ -33,8 +33,8 @@ export function render(s: State): void {
     elPieceName: PieceName,
     anim: AnimVector | undefined,
     fading: cg.Piece | undefined,
-    pMvdset: cg.PieceNode[] | undefined,
-    pMvd: cg.PieceNode | undefined,
+    // pMvdset: cg.PieceNode[] | undefined,
+    // pMvd: cg.PieceNode | undefined,
     sMvdset: cg.SquareNode[] | undefined,
     sMvd: cg.SquareNode | undefined;
 
@@ -124,28 +124,46 @@ export function render(s: State): void {
   for (const [k, p] of pieces) {
     anim = anims.get(k);
     if (!samePieces.has(k)) {
-      pMvdset = movedPieces.get(pieceNameOf(p));
-      pMvd = pMvdset && pMvdset.pop();
-      // a same piece was moved
-      if (pMvd) {
-        // apply dom changes
-        pMvd.cgKey = k;
-        if (pMvd.cgFading) {
-          pMvd.classList.remove('fading');
-          pMvd.cgFading = false;
+      if (p.bellow && p.bellow.length > 0){
+        const reversed = p.bellow.reverse();
+        console.log(p);
+        const pieces = reversed.map( (p) => {
+          const pieceName = pieceNameOf(p),
+            pieceNode = createEl('piece', pieceName) as cg.PieceNode;
+          pieceNode.cgPiece = pieceName;
+          pieceNode.cgKey = k;
+          return pieceNode;
+        })
+
+        console.log(pieces);
+        for (let i = 0; i < pieces.length-1; i++) {
+          pieces[i+1].style.width = '100%';
+          pieces[i+1].style.height = '100%';
+          pieces[i+1].style.transform = `translate(0px,-10px)`;
+          pieces[i].appendChild(pieces[i+1])
         }
-        const pos = key2pos(k);
-        if (s.addPieceZIndex) pMvd.style.zIndex = posZIndex(pos, asWhite);
+
+        const topPieceName = pieceNameOf(p),
+          topPieceNode = createEl('piece', topPieceName) as cg.PieceNode,
+          pos = key2pos(k);
+        topPieceNode.cgPiece = topPieceName;
+        topPieceNode.cgKey = k
+        topPieceNode.style.width = '100%';
+        topPieceNode.style.height = '100%';
+        topPieceNode.style.transform = `translate(0px,-10px)`;
         if (anim) {
-          pMvd.cgAnimating = true;
-          pMvd.classList.add('anim');
+          pieces[0].cgAnimating = true;
           pos[0] += anim[2];
           pos[1] += anim[3];
         }
-        translate(pMvd, posToTranslate(pos, asWhite));
+        translate(pieces[0], posToTranslate(pos, asWhite));
+        if (s.addPieceZIndex) {
+          pieces[0].style.zIndex = posZIndex(pos, asWhite);
+        }
+
+        pieces[pieces.length-1].appendChild(topPieceNode);
+        boardEl.appendChild(pieces[0]);
       }
-      // no piece in moved obj: insert the new piece
-      // assumes the new piece is not being dragged
       else {
         const pieceName = pieceNameOf(p),
           pieceNode = createEl('piece', pieceName) as cg.PieceNode,
@@ -159,9 +177,9 @@ export function render(s: State): void {
           pos[1] += anim[3];
         }
         translate(pieceNode, posToTranslate(pos, asWhite));
-
-        if (s.addPieceZIndex) pieceNode.style.zIndex = posZIndex(pos, asWhite);
-
+        if (s.addPieceZIndex) {
+          pieceNode.style.zIndex = posZIndex(pos, asWhite);
+        }
         boardEl.appendChild(pieceNode);
       }
     }
@@ -199,7 +217,7 @@ function removeNodes(s: State, nodes: HTMLElement[]): void {
 function posZIndex(pos: cg.Pos, asWhite: boolean): string {
   let z = 2 + pos[1] * 8 + (7 - pos[0]);
   if (asWhite) z = 67 - z;
-  return z + '';
+  return z + ''; // from 100 up we have the top stones
 }
 
 function pieceNameOf(piece: cg.Piece): string {

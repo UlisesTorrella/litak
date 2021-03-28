@@ -61,4 +61,6 @@ scalacOptions ++= Seq(
   "12"
 )
 
+scalacOptions in (console) ~= { _.filterNot(Set("-Ywarn-unused-import", "-Ywarn-unused:imports")) }
+
 publishTo := Option(Resolver.file("file", new File(sys.props.getOrElse("publishTo", ""))))

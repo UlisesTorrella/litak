@@ -10,17 +10,11 @@ case class Board(
     crazyData: Option[Crazyhouse.Data] = None
 ) {
 
-  def apply(at: Pos): Option[Piece] =
-    pieces get at match {
-      case Some(stack) => stack lift 0
-      case None => None
-    }
+  def apply(at: Pos): Option[Stack[Piece]] = pieces get at
 
-  def apply(file: File, rank: Rank) =
-    pieces get Pos(file, rank) match {
-      case Some(stack) => stack lift 0
-      case None => None
-    }
+  def apply(file: File, rank: Rank): Option[Stack[Piece]] =
+    pieces get Pos(file, rank)
+
   lazy val actors: Map[Pos, Actor] = pieces collect {
     case (pos, Stack(x, _*)) => (pos -> Actor(x, pos, this))
   }
@@ -50,7 +44,10 @@ case class Board(
     actions.foldLeft(Option(this): Option[Board])(_ flatMap _)
 
   def place(piece: Piece, at: Pos): Option[Board] =
-    if (pieces contains at) None
+    if (pieces contains at) pieces get at match {
+      case Some(Stack()) => Option(copy(pieces = pieces + ((at, Stack(piece)))))
+      case _ => None
+    }
     else Option(copy(pieces = pieces + ((at, Stack(piece)))))
 
   def take(at: Pos): Option[Board] =
@@ -85,13 +82,7 @@ case class Board(
 
   def hasPiece(p: Piece) = pieces.values exists { case Stack(x) => x == p }
 
-  def promote(pos: Pos): Option[Board] =
-    for {
-      pawn <- apply(pos)
-      if pawn is Pawn
-      b2 <- take(pos)
-      b3 <- b2.place(pawn.color.queen, pos)
-    } yield b3
+  def promote(pos: Pos): Option[Board] = None
 
   def withHistory(h: History): Board = copy(history = h)
 
@@ -128,13 +119,13 @@ case class Board(
   def materialImbalance: Int = variant.materialImbalance(this)
 
   def emptySquares: List[Pos] =
-    Pos.all diff pieces.keys.toSeq
+    Pos.all diff pieces.filterNot(_._2 isEmpty).keys.toSeq
 
   def hasPathstoneAt(pos: Pos, c: Color) =
     if (pieces contains pos)
       pieces(pos) match {
         case Stack() => false
-        case Stack(x) => x.role match {
+        case Stack(x, _*) => x.role match {
                            case _: Pathstone => x.color == c
                            case _ => false
                          }

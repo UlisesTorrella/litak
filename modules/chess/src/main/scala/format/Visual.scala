@@ -46,7 +46,11 @@ object Visual {
     for (y <- Rank.allReversed) yield {
       for (x <- File.all) yield {
         val pos = Pos(x, y)
-        markedPoss.get(pos) getOrElse board(pos).fold(' ')(_ forsyth)
+        markedPoss.get(pos) getOrElse board(pos).fold(' ')( _ match {
+          case Stack(p,_*) => p forsyth
+          case _ => ' '
+        }
+        )
       }
     } mkString
   } map { """\s*$""".r.replaceFirstIn(_, "") } mkString "\n"

@@ -9,6 +9,7 @@ export interface Piece {
   role: Role;
   color: Color;
   promoted?: boolean;
+  bellow?: Array<Piece>;
 }
 export interface Drop {
   role: Role;
