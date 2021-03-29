@@ -43,6 +43,7 @@ export function render(s: State): void {
   while (el) {
     k = el.cgKey;
     if (isPieceNode(el)) {
+      const index = el.cgStackIndex;
       pieceAtKey = pieces.get(k);
       anim = anims.get(k);
       fading = fadings.get(k);
@@ -60,32 +61,38 @@ export function render(s: State): void {
       }
       // there is now a piece at this dom key
       if (pieceAtKey) {
-        // continue animation if already animating and same piece
-        // (otherwise it could animate a captured piece)
-        if (anim && el.cgAnimating && elPieceName === pieceNameOf(pieceAtKey)) {
-          const pos = key2pos(k);
-          pos[0] += anim[2];
-          pos[1] += anim[3];
-          el.classList.add('anim');
-          translate(el, posToTranslate(pos, asWhite));
-        } else if (el.cgAnimating) {
-          el.cgAnimating = false;
-          el.classList.remove('anim');
-          translate(el, posToTranslate(key2pos(k), asWhite));
-          if (s.addPieceZIndex) el.style.zIndex = posZIndex(key2pos(k), asWhite);
-        }
-        // same piece: flag as same
-        if (elPieceName === pieceNameOf(pieceAtKey) && (!fading || !el.cgFading)) {
-          samePieces.add(k);
-        }
-        // different piece: flag as moved unless it is a fading piece
-        else {
-          if (fading && elPieceName === pieceNameOf(fading)) {
-            el.classList.add('fading');
-            el.cgFading = true;
-          } else {
-            appendValue(movedPieces, elPieceName, el);
+        if (index && index! > 0 && pieceAtKey!.bellow && pieceAtKey.bellow!.length >= index) {
+          pieceAtKey = pieceAtKey.bellow[index - 1];
+          // continue animation if already animating and same piece
+          // (otherwise it could animate a captured piece)
+          if (anim && el.cgAnimating && elPieceName === pieceNameOf(pieceAtKey)) {
+            const pos = key2pos(k);
+            pos[0] += anim[2];
+            pos[1] += anim[3];
+            el.classList.add('anim');
+            translate(el, posToTranslate(pos, asWhite));
+          } else if (el.cgAnimating) {
+            el.cgAnimating = false;
+            el.classList.remove('anim');
+            translate(el, posToTranslate(key2pos(k), asWhite));
+            if (s.addPieceZIndex) el.style.zIndex = posZIndex(key2pos(k), asWhite);
           }
+          // same piece: flag as same
+          if (elPieceName === pieceNameOf(pieceAtKey) && (!fading || !el.cgFading)) {
+            samePieces.add(k);
+          }
+          // different piece: flag as moved unless it is a fading piece
+          else {
+            if (fading && elPieceName === pieceNameOf(fading)) {
+              el.classList.add('fading');
+              el.cgFading = true;
+            } else {
+              appendValue(movedPieces, elPieceName, el);
+            }
+          }
+        }
+        else {
+          appendValue(movedPieces, elPieceName, el);
         }
       }
       // no piece: flag as moved
@@ -125,13 +132,14 @@ export function render(s: State): void {
     anim = anims.get(k);
     if (!samePieces.has(k)) {
       if (p.bellow && p.bellow.length > 0){
-        const reversed = p.bellow.reverse();
-        console.log(p);
-        const pieces = reversed.map( (p) => {
+        const bellowLength = p.bellow.length;
+        const reversed = [...p.bellow].reverse();
+        const pieces = reversed.map( (p, i) => {
           const pieceName = pieceNameOf(p),
             pieceNode = createEl('piece', pieceName) as cg.PieceNode;
           pieceNode.cgPiece = pieceName;
           pieceNode.cgKey = k;
+          pieceNode.cgStackIndex = bellowLength - i;
           return pieceNode;
         })
 
@@ -139,7 +147,7 @@ export function render(s: State): void {
         for (let i = 0; i < pieces.length-1; i++) {
           pieces[i+1].style.width = '100%';
           pieces[i+1].style.height = '100%';
-          pieces[i+1].style.transform = `translate(0px,-10px)`;
+          pieces[i+1].style.transform = `translate(5px,-5px)`;
           pieces[i].appendChild(pieces[i+1])
         }
 
@@ -147,10 +155,11 @@ export function render(s: State): void {
           topPieceNode = createEl('piece', topPieceName) as cg.PieceNode,
           pos = key2pos(k);
         topPieceNode.cgPiece = topPieceName;
-        topPieceNode.cgKey = k
+        topPieceNode.cgKey = k;
+        topPieceNode.cgStackIndex = 0;
         topPieceNode.style.width = '100%';
         topPieceNode.style.height = '100%';
-        topPieceNode.style.transform = `translate(0px,-10px)`;
+        topPieceNode.style.transform = `translate(5px,-5px)`;
         if (anim) {
           pieces[0].cgAnimating = true;
           pos[0] += anim[2];
@@ -171,6 +180,7 @@ export function render(s: State): void {
 
         pieceNode.cgPiece = pieceName;
         pieceNode.cgKey = k;
+        pieceNode.cgStackIndex = 0;
         if (anim) {
           pieceNode.cgAnimating = true;
           pos[0] += anim[2];

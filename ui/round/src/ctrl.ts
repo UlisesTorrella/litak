@@ -388,7 +388,9 @@ export default class RoundController {
           !o.castle ||
           (pieces.get(o.castle.king[0])?.role === 'king' && pieces.get(o.castle.rook[0])?.role === 'rook')
         ) {
-          this.chessground.move(keys[0], keys[1]);
+          if (activeColor) {
+            this.chessground.move(keys[0], keys[1]);
+          }
         }
       }
       if (o.enpassant) {

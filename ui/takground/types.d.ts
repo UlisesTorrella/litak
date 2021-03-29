@@ -66,6 +66,7 @@ export interface PieceNode extends KeyedNode {
     cgAnimating?: boolean;
     cgFading?: boolean;
     cgDragging?: boolean;
+    cgStackIndex?: number;
 }
 export interface SquareNode extends KeyedNode {
     tagName: 'SQUARE';
