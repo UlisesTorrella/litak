@@ -55,7 +55,8 @@ trait GameHelper { self: I18nHelper with UserHelper with AiHelper with StringHel
       case (_, _, Aborted)                                  => "Game has been aborted"
       case (_, _, VariantEnd) =>
         game.variant match {
-          case chess.variant.Crazyhouse    => "Drop captured pieces on the board"
+          case chess.variant.Crazyhouse    => "Drop stones on the board"
+          case chess.variant.Standard      => "Drop stones on the board"
           case _                           => "Variant ending"
         }
       case _ => "Game is still being played"

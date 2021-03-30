@@ -69,7 +69,7 @@ export default class EditorCtrl {
 
     this.castlingToggles = { K: false, Q: false, k: false, q: false };
     this.rules =
-      !this.cfg.embed && window.history.state && window.history.state.rules ? window.history.state.rules : 'chess';
+      !this.cfg.embed && window.history.state && window.history.state.rules ? window.history.state.rules : 'standard';
 
     this.redraw = () => {};
     this.setFen(cfg.fen);
@@ -137,14 +137,14 @@ export default class EditorCtrl {
     return {
       fen: this.getFen(),
       legalFen: this.getLegalFen(),
-      playable: this.rules == 'chess' && this.isPlayable(),
+      playable: this.rules == 'standard' && this.isPlayable(),
     };
   }
 
   makeAnalysisUrl(legalFen: string): string {
     switch (this.rules) {
-      case 'chess':
-        return this.makeUrl('/analysis/', legalFen);
+      case 'standard':
+        return this.makeUrl(`/analysis/${this.rules}/`, legalFen);
       case '3check':
         return this.makeUrl('/analysis/threeCheck/', legalFen);
       case 'kingofthehill':
@@ -221,7 +221,7 @@ export default class EditorCtrl {
 
   setRules(rules: Rules): void {
     this.rules = rules;
-    if (rules != 'crazyhouse') this.pockets = undefined;
+    if (rules != 'standard' || rules != 'crazyhouse') this.pockets = undefined;
     else if (!this.pockets) this.pockets = Material.empty();
     if (rules != '3check') this.remainingChecks = undefined;
     else if (!this.remainingChecks) this.remainingChecks = RemainingChecks.default();

@@ -61,22 +61,17 @@ object GameDiff {
       o.flatMap { case (x, y, z) =>
         ByteArrayBSONHandler.writeOpt(BinaryFormat.clockHistory.writeSide(x, y, z))
       }
-
-    if (a.variant.standard) dTry(huffmanPgn, _.pgnMoves, writeBytes compose PgnStorage.Huffman.encode)
-    else {
-      val f = PgnStorage.OldBin
-      dTry(oldPgn, _.pgnMoves, writeBytes compose f.encode)
-      dTry(binaryPieces, _.board.pieces, writeBytes compose BinaryFormat.piece.write)
-      d(positionHashes, _.history.positionHashes, w.bytes)
-      dTry(castleLastMove, makeCastleLastMove, CastleLastMove.castleLastMoveBSONHandler.writeTry)
-      // since variants are always OldBin
-      if (a.variant.crazyhouse)
-        dOpt(
-          crazyData,
-          _.board.crazyData,
-          (o: Option[chess.variant.Crazyhouse.Data]) => o map BSONHandlers.crazyhouseDataBSONHandler.write
-        )
-    }
+    val f = PgnStorage.OldBin
+    dTry(oldPgn, _.pgnMoves, writeBytes compose f.encode)
+    dTry(binaryPieces, _.board.pieces, writeBytes compose BinaryFormat.piece.write)
+    d(positionHashes, _.history.positionHashes, w.bytes)
+    dTry(castleLastMove, makeCastleLastMove, CastleLastMove.castleLastMoveBSONHandler.writeTry)
+    // since variants are always OldBin
+    dOpt(
+      crazyData,
+      _.board.crazyData,
+      (o: Option[chess.variant.Standard.Data]) => o map BSONHandlers.crazyhouseDataBSONHandler.write
+    )
     d(turns, _.turns, w.int)
     dOpt(moveTimes, _.binaryMoveTimes, (o: Option[ByteArray]) => o flatMap ByteArrayBSONHandler.writeOpt)
     dOpt(whiteClockHistory, getClockHistory(White), clockHistoryToBytes)

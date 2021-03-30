@@ -1,7 +1,7 @@
 package views.html.analyse
 
 import bits.dataPanel
-import chess.variant.Crazyhouse
+import chess.variant.Standard
 import controllers.routes
 import play.api.i18n.Lang
 import play.api.libs.json.Json
@@ -73,7 +73,7 @@ object replay {
       title = titleOf(pov),
       moreCss = frag(
         cssTag("analyse.round"),
-        pov.game.variant == Crazyhouse option cssTag("analyse.zh"),
+        Option(cssTag("analyse.zh")),
         ctx.blind option cssTag("round.nvui")
       ),
       moreJs = frag(

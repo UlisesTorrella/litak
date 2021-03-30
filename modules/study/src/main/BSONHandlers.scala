@@ -2,7 +2,7 @@ package lila.study
 
 import chess.format.pgn.{ Glyph, Glyphs, Tag, Tags }
 import chess.format.{ FEN, Uci, UciCharPair }
-import chess.variant.{ Crazyhouse, Variant }
+import chess.variant.{ Standard, Variant }
 import chess.{ Centis, Pos, PromotableRole, Role }
 import org.joda.time.DateTime
 import reactivemongo.api.bson._
@@ -111,18 +111,18 @@ object BSONHandlers {
 
   implicit val GamebookBSONHandler = Macros.handler[Gamebook]
 
-  implicit private def CrazyDataBSONHandler: BSON[Crazyhouse.Data] =
-    new BSON[Crazyhouse.Data] {
-      private def writePocket(p: Crazyhouse.Pocket) = p.roles.map(_.forsyth).mkString
-      private def readPocket(p: String)             = Crazyhouse.Pocket(p.view.flatMap(chess.Role.forsyth).toList)
+  implicit private def CrazyDataBSONHandler: BSON[Standard.Data] =
+    new BSON[Standard.Data] {
+      private def writePocket(p: Standard.Pocket) = p.roles.map(_.forsyth).mkString
+      private def readPocket(p: String)             = Standard.Pocket(p.view.flatMap(chess.Role.forsyth).toList)
       def reads(r: Reader) =
-        Crazyhouse.Data(
-          pockets = Crazyhouse.Pockets(
+        Standard.Data(
+          pockets = Standard.Pockets(
             white = readPocket(r.strD("w")),
             black = readPocket(r.strD("b"))
           )
         )
-      def writes(w: Writer, s: Crazyhouse.Data) =
+      def writes(w: Writer, s: Standard.Data) =
         $doc(
           "w" -> w.strO(writePocket(s.pockets.white)),
           "b" -> w.strO(writePocket(s.pockets.black))
@@ -170,7 +170,7 @@ object BSONHandlers {
       glyphs         = doc.getAsOpt[Glyphs](F.glyphs) getOrElse Glyphs.empty
       score          = doc.getAsOpt[Score](F.score)
       clock          = doc.getAsOpt[Centis](F.clock)
-      crazy          = doc.getAsOpt[Crazyhouse.Data](F.crazy)
+      crazy          = doc.getAsOpt[Standard.Data](F.crazy)
       forceVariation = ~doc.getAsOpt[Boolean](F.forceVariation)
     } yield Node(
       id,
@@ -229,7 +229,7 @@ object BSONHandlers {
         glyphs = r.getO[Glyphs](glyphs) | Glyphs.empty,
         score = r.getO[Score](score),
         clock = r.getO[Centis](clock),
-        crazyData = r.getO[Crazyhouse.Data](crazy),
+        crazyData = r.getO[Standard.Data](crazy),
         children = StudyFlatTree.reader.rootChildren(fullReader.doc)
       )
     }

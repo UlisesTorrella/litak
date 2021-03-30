@@ -2,7 +2,7 @@ package lila.game
 
 import play.api.libs.json._
 
-import chess.variant.Crazyhouse
+import chess.variant.Standard
 import chess.{
   Centis,
   PromotableRole,
@@ -46,7 +46,7 @@ object Event {
         clock: Option[ClockEvent],
         possibleMoves: Map[Pos, List[Pos]],
         possibleDrops: Option[List[Pos]],
-        crazyData: Option[Crazyhouse.Data]
+        crazyData: Option[Standard.Data]
     )(extra: JsObject) = {
       extra ++ Json
         .obj(
@@ -77,7 +77,7 @@ object Event {
       clock: Option[ClockEvent],
       possibleMoves: Map[Pos, List[Pos]],
       possibleDrops: Option[List[Pos]],
-      crazyData: Option[Crazyhouse.Data]
+      crazyData: Option[Standard.Data]
   ) extends Event {
     def typ = "move"
     def data =
@@ -98,7 +98,7 @@ object Event {
         situation: Situation,
         state: State,
         clock: Option[ClockEvent],
-        crazyData: Option[Crazyhouse.Data]
+        crazyData: Option[Standard.Data]
     ): Move =
       Move(
         orig = move.orig,
@@ -125,7 +125,7 @@ object Event {
       state: State,
       clock: Option[ClockEvent],
       possibleMoves: Map[Pos, List[Pos]],
-      crazyData: Option[Crazyhouse.Data],
+      crazyData: Option[Standard.Data],
       possibleDrops: Option[List[Pos]]
   ) extends Event {
     def typ = "drop"
@@ -145,7 +145,7 @@ object Event {
         situation: Situation,
         state: State,
         clock: Option[ClockEvent],
-        crazyData: Option[Crazyhouse.Data]
+        crazyData: Option[Standard.Data]
     ): Drop =
       Drop(
         role = drop.piece.role,

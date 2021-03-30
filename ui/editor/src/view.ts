@@ -77,14 +77,8 @@ function variant2option(key: Rules, name: string, ctrl: EditorCtrl): VNode {
 }
 
 const allVariants: Array<[Rules, string]> = [
-  ['chess', 'Standard'],
-  ['antichess', 'Antichess'],
-  ['atomic', 'Atomic'],
-  ['crazyhouse', 'Crazyhouse'],
-  ['horde', 'Horde'],
-  ['kingofthehill', 'King of the Hill'],
-  ['racingkings', 'Racing Kings'],
-  ['3check', 'Three-check'],
+  ['standard', 'Standard'],
+  ['crazyhouse', 'Crazyhouse']
 ];
 
 function controls(ctrl: EditorCtrl, state: EditorState): VNode {

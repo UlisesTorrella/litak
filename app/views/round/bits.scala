@@ -1,7 +1,7 @@
 package views.html
 package round
 
-import chess.variant.{ Crazyhouse, Variant }
+import chess.variant.{ Standard, Variant }
 import controllers.routes
 import scala.util.chaining._
 
@@ -27,7 +27,7 @@ object bits {
       openGraph = openGraph,
       moreJs = moreJs,
       moreCss = frag(
-        cssTag { if (variant == Crazyhouse) "round.zh" else "round" },
+        cssTag { "round.zh" },
         ctx.blind option cssTag("round.nvui"),
         moreCss
       ),

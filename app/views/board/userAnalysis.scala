@@ -2,7 +2,7 @@ package views.html.board
 
 import play.api.libs.json.{ JsObject, Json }
 
-import chess.variant.Crazyhouse
+import chess.variant.Standard
 
 import lila.api.Context
 import lila.app.templating.Environment._
@@ -19,7 +19,7 @@ object userAnalysis {
       title = trans.analysis.txt(),
       moreCss = frag(
         cssTag("analyse.free"),
-        pov.game.variant == Crazyhouse option cssTag("analyse.zh"),
+        pov.game.variant == Standard option cssTag("analyse.zh"),
         withForecast option cssTag("analyse.forecast"),
         ctx.blind option cssTag("round.nvui")
       ),

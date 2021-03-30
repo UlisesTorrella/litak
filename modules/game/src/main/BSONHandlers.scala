@@ -1,6 +1,6 @@
 package lila.game
 
-import chess.variant.{ Crazyhouse, Variant }
+import chess.variant.{ Variant, Standard }
 import chess.{
   CheckCount,
   Color,
@@ -32,12 +32,12 @@ object BSONHandlers {
     x => BSONInteger(x.id)
   )
 
-  implicit private[game] val crazyhouseDataBSONHandler = new BSON[Crazyhouse.Data] {
+  implicit private[game] val crazyhouseDataBSONHandler = new BSON[Standard.Data] {
 
-    import Crazyhouse._
+    import Standard._
 
     def reads(r: BSON.Reader) =
-      Crazyhouse.Data(
+      Standard.Data(
         pockets = {
           val (white, black) = {
             r.str("p").view.flatMap(chess.Piece.fromChar).to(List)
@@ -49,7 +49,7 @@ object BSONHandlers {
         }
       )
 
-    def writes(w: BSON.Writer, o: Crazyhouse.Data) =
+    def writes(w: BSON.Writer, o: Standard.Data) =
       BSONDocument(
         "p" -> {
           o.pockets.white.roles.map(_.forsythUpper).mkString +
@@ -102,7 +102,7 @@ object BSONHandlers {
               checkCount = Game.emptyCheckCount
             ),
             variant = gameVariant,
-            crazyData = gameVariant.crazyhouse option r.get[Crazyhouse.Data](F.crazyData)
+            crazyData = Option(r.get[Standard.Data](F.crazyData))
           ),
           color = turnColor
         ),
@@ -186,25 +186,21 @@ object BSONHandlers {
         F.simulId           -> o.metadata.simulId,
         F.analysed          -> w.boolO(o.metadata.analysed)
       ) ++ {
-        if (o.variant.standard)
-          $doc(F.huffmanPgn -> PgnStorage.Huffman.encode(o.pgnMoves take Game.maxPlies))
-        else {
-          val f = PgnStorage.OldBin
-          $doc(
-            F.oldPgn         -> f.encode(o.pgnMoves take Game.maxPlies),
-            F.binaryPieces   -> BinaryFormat.piece.write(o.board.pieces),
-            F.positionHashes -> o.history.positionHashes,
-            F.castleLastMove -> CastleLastMove.castleLastMoveBSONHandler
-              .writeTry(
-                CastleLastMove(
-                  lastMove = o.history.lastMove
-                )
+        val f = PgnStorage.OldBin
+        $doc(
+          F.oldPgn         -> f.encode(o.pgnMoves take Game.maxPlies),
+          F.binaryPieces   -> BinaryFormat.piece.write(o.board.pieces),
+          F.positionHashes -> o.history.positionHashes,
+          F.castleLastMove -> CastleLastMove.castleLastMoveBSONHandler
+            .writeTry(
+              CastleLastMove(
+                lastMove = o.history.lastMove
               )
-              .toOption,
-            F.checkCount -> o.history.checkCount.nonEmpty.option(o.history.checkCount),
-            F.crazyData  -> o.board.crazyData
-          )
-        }
+            )
+            .toOption,
+          F.checkCount -> o.history.checkCount.nonEmpty.option(o.history.checkCount),
+          F.crazyData  -> o.board.crazyData
+        )
       }
   }
 
