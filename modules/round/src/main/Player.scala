@@ -125,8 +125,8 @@ final private class Player(
       metrics: MoveMetrics
   ): Validated[String, MoveResult] =
     (uci match {
-      case Uci.Move(orig, dest, prom) =>
-        game.chess(orig, dest, prom, metrics) map { case (ncg, move) =>
+      case Uci.Move(orig, dir, i, drops) =>
+        game.chess(orig, dir, i, drops, metrics) map { case (ncg, move) =>
           ncg -> (Left(move): MoveOrDrop)
         }
       case Uci.Drop(role, pos) =>{

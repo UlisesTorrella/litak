@@ -175,7 +175,7 @@ final class JsonView(
       val (_, branchList) = puzzle.line.tail.foldLeft[(chess.Game, List[tree.Branch])]((init, Nil)) {
         case ((prev, branches), uci) =>
           val (game, move) =
-            prev(uci.orig, uci.dest, uci.i)
+            prev(uci.orig, uci.dir, uci.i, uci.drops)
               .fold(err => sys error s"puzzle ${puzzle.id} $err", identity)
           val branch = tree.Branch(
             id = UciCharPair(move.toUci),

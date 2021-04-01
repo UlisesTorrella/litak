@@ -46,9 +46,9 @@ trait ChessgroundHelper {
     chessground(
       board = pov.game.board,
       orient = pov.color,
-      lastMove = pov.game.history.lastMove.map(_.origDest) ?? { case (orig, dest) =>
-        List(orig, dest)
-      }
+      lastMove = Nil //pov.game.history.lastMove.map(_.origDest) ?? { case (orig, dest) =>
+      //   List(orig, dir, i, drops)
+      // }
     )
 
   private def wrap(content: Frag): Frag =

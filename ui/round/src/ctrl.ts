@@ -163,6 +163,11 @@ export default class RoundController {
     if (!this.keyboardMove || !this.keyboardMove.usedSan) ab.move(this, meta);
     if (!promotion.start(this, orig, dest, meta)) this.sendMove(orig, dest, undefined, meta);
   };
+  //
+  // private onUserMove = (m: cg.Move, meta: cg.MoveMetadata) => {
+  //   if (!this.keyboardMove || !this.keyboardMove.usedSan) ab.move(this, meta);
+  //   if (!promotion.start(this, orig, dest, meta)) this.sendMove(m, undefined, meta);
+  // };
 
   private onUserNewPiece = (role: cg.Role, key: cg.Key, meta: cg.MoveMetadata) => {
     if (!this.replaying() && crazyValid(this.data, role, key)) {
@@ -296,9 +301,18 @@ export default class RoundController {
     this.redraw();
   };
 
+// parcially here until I do everything on takground
+  keysToDir = (orig: cg.Key, dest: cg.Key) => {
+    const fdiff = orig.charCodeAt(0) - dest.charCodeAt(0);
+    const rdiff = orig.charCodeAt(1) - dest.charCodeAt(1);
+    if (fdiff===0) return (rdiff>0) ? '-' as cg.Direction : '+' as cg.Direction;
+    else return (fdiff>0) ? '<' as cg.Direction : '>' as cg.Direction;
+  }
+//  sendMove = (m: cg.Move, prom: cg.Role | undefined, meta: cg.MoveMetadata) => {
   sendMove = (orig: cg.Key, dest: cg.Key, prom: cg.Role | undefined, meta: cg.MoveMetadata) => {
     const move: SocketMove = {
-      u: orig + dest,
+  //    u: m.index + m.orig + m.dir + m.drops.join(""),
+      u: 1 + orig + this.keysToDir(orig, dest) + "1",
     };
     if (prom) move.u += prom === 'knight' ? 'n' : prom[0];
     if (blur.get()) move.b = 1;
@@ -382,14 +396,14 @@ export default class RoundController {
       else {
         // This block needs to be idempotent, even for castling moves in
         // Chess960.
-        const keys = util.uci2move(o.uci)!,
+        const move = util.uci2move(o.uci)!,
           pieces = this.chessground.state.pieces;
         if (
           !o.castle ||
           (pieces.get(o.castle.king[0])?.role === 'king' && pieces.get(o.castle.rook[0])?.role === 'rook')
         ) {
           if (activeColor) {
-            this.chessground.move(keys[0], keys[1]);
+            this.chessground.move(move);
           }
         }
       }

@@ -5,6 +5,7 @@ export declare type Rank = typeof ranks[number];
 export declare type Key = 'a0' | `${File}${Rank}`;
 export declare type FEN = string;
 export declare type Pos = [number, number];
+export declare type Direction = '<' | '>' | '+' | '-';
 export interface Piece {
     role: Role;
     color: Color;
@@ -45,6 +46,12 @@ export interface Dom {
 export interface Exploding {
     stage: number;
     keys: readonly Key[];
+}
+export interface Move {
+    index: number;
+    orig: Key;
+    dir: Direction;
+    drops: number[];
 }
 export interface MoveMetadata {
     premove: boolean;

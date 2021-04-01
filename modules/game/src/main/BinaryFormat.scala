@@ -180,7 +180,7 @@ object BinaryFormat {
     def write(clmt: CastleLastMove): ByteArray = {
       def posInt(pos: Pos): Int = (pos.file.index << 3) + pos.rank.index
       val lastMoveInt = clmt.lastMove.map(_.origDest).fold(0) { case (o, d) =>
-        (posInt(o) << 6) + posInt(d)
+        (posInt(o) << 6) + chess.Direction.toInt(d)
       }
       Array((lastMoveInt >> 8) toByte, lastMoveInt.toByte)
     }
@@ -194,9 +194,15 @@ object BinaryFormat {
       CastleLastMove(
         lastMove = for {
           orig <- Pos.at((b1 & 15) >> 1, ((b1 & 1) << 2) + (b2 >> 6))
-          dest <- Pos.at((b2 & 63) >> 3, b2 & 7)
-          if orig != Pos.A1 || dest != Pos.A1
-        } yield Uci.Move(orig, dest)
+          dir  = b2 match {
+            case 0 => chess.Direction.Left
+            case 1 => chess.Direction.Right
+            case 2 => chess.Direction.Up
+            case 3 => chess.Direction.Down
+            case _ => chess.Direction.Up
+          }
+          if orig != Pos.A1
+        } yield Uci.Move(orig, dir)
       )
   }
 

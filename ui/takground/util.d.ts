@@ -19,3 +19,5 @@ export declare const eventPosition: (e: cg.MouchEvent) => cg.NumberPair | undefi
 export declare const isRightButton: (e: cg.MouchEvent) => boolean;
 export declare const createEl: (tagName: string, className?: string | undefined) => HTMLElement;
 export declare function computeSquareCenter(key: cg.Key, asWhite: boolean, bounds: ClientRect): cg.NumberPair;
+export declare function keysToDir(orig: cg.Key, dest: cg.Key): cg.Direction;
+export declare function moveTo(orig: cg.Key, dir: cg.Direction): cg.Key | undefined;

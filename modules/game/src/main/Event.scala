@@ -68,23 +68,25 @@ object Event {
 
   case class Move(
       orig: Pos,
-      dest: Pos,
+      dir: chess.Direction.Direction,
       san: String,
       fen: String, // not a FEN, just a board fen
-      promotion: Option[Promotion],
+      index: Int,
+      drops: List[Int],
       enpassant: Option[Enpassant],
       state: State,
       clock: Option[ClockEvent],
       possibleMoves: Map[Pos, List[Pos]],
       possibleDrops: Option[List[Pos]],
-      crazyData: Option[Standard.Data]
+      crazyData: Option[Standard.Data],
+      promotion: Option[Promotion] = None,
   ) extends Event {
     def typ = "move"
     def data =
       MoveOrDrop.data(fen, state, clock, possibleMoves, possibleDrops, crazyData) {
         Json
           .obj(
-            "uci" -> s"${orig.key}${dest.key}",
+            "uci" -> s"${index}${orig.key}${dir.toString}${drops.map(_.toString).mkString("")}",
             "san" -> san
           )
           .add("promotion" -> promotion.map(_.data))
@@ -102,10 +104,9 @@ object Event {
     ): Move =
       Move(
         orig = move.orig,
-        dest = move.dest,
+        dir = move.dir,
         san = chess.format.pgn.Dumper(move),
         fen = chess.format.Forsyth.exportBoard(situation.board),
-        promotion = move.promotion.map { Promotion(_, move.dest) },
         enpassant = (move.capture ifTrue move.enpassant).map {
           Event.Enpassant(_, !move.color)
         },
@@ -113,7 +114,9 @@ object Event {
         clock = clock,
         possibleMoves = situation.destinations,
         possibleDrops = situation.drops,
-        crazyData = crazyData
+        crazyData = crazyData,
+        index = move.stackIndex,
+        drops = move.drops
       )
   }
 

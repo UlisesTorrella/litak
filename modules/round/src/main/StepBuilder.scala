@@ -11,6 +11,13 @@ object StepBuilder {
 
   private val logger = lila.round.logger.branch("StepBuilder")
 
+  // [info] round.StepBuilder - https://lichess.org/j9dmsNAg Cannot parse move: [1.2] failure: '@' expected but 'd' found
+  // [info] http - 200 browser GET /j9dmsNAg GET Round.watcher 38ms
+  // [info] round.StepBuilder - https://lichess.org/j9dmsNAg Cannot parse move: [1.2] failure: '@' expected but 'd' found
+  // [info] http - 200 browser GET /j9dmsNAg GET Round.watcher 29ms
+  // [info] round.StepBuilder - https://lichess.org/j9dmsNAg Cannot parse move: [1.2] failure: '@' expected but 'd' found
+  // [info] http - 200 browser GET /j9dmsNAg GET Round.watcher 21ms
+
   def apply(
       id: String,
       pgnMoves: Vector[String],

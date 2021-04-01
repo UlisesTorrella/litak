@@ -91,7 +91,7 @@ final private class Captcher(gameRepo: GameRepo)(implicit ec: scala.concurrent.E
           }
         }
         .to(List) map { move =>
-        s"${move.orig} ${move.dest}"
+        s"${move.orig} ${move.dir}"
       } toNel
 
     private def rewind(moves: PgnMoves): Option[ChessGame] =

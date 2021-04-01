@@ -21,10 +21,15 @@ export const justIcon = (icon: string): VNodeData => ({
   attrs: { 'data-icon': icon },
 });
 
-export const uci2move = (uci: string): cg.Key[] | undefined => {
+export const uci2move = (uci: string): cg.Move | undefined => {
   if (!uci) return undefined;
-  if (uci[1] === '@') return [uci.slice(2, 4) as cg.Key];
-  return [uci.slice(0, 2), uci.slice(2, 4)] as cg.Key[];
+  if (uci[1] === '@') return undefined; // Drops are not sopported here//[uci.slice(2, 4) as cg.Key];
+  return {
+    index: parseInt(uci[0]),
+    orig: uci.slice(1, 3),
+    dir: uci[3],
+    drops: uci.slice(4).split("").map( i => parseInt(i))
+  } as cg.Move;
 };
 
 export const onInsert = (f: (el: HTMLElement) => void): Hooks => ({

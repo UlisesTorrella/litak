@@ -7,7 +7,7 @@ export interface Api {
     state: State;
     getFen(): cg.FEN;
     toggleOrientation(): void;
-    move(orig: cg.Key, dest: cg.Key): void;
+    move(move: cg.Move): void;
     setPieces(pieces: cg.PiecesDiff): void;
     selectSquare(key: cg.Key | null, force?: boolean): void;
     newPiece(piece: cg.Piece, key: cg.Key): void;

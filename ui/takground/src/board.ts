@@ -1,5 +1,5 @@
 import { HeadlessState } from './state';
-import { pos2key, key2pos, opposite, distanceSq, allPos, computeSquareCenter } from './util';
+import { pos2key, key2pos, opposite, distanceSq, allPos, computeSquareCenter, moveTo } from './util';
 import { premove, queen, knight } from './premove';
 import * as cg from './types';
 
@@ -93,19 +93,43 @@ function tryAutoCastle(state: HeadlessState, orig: cg.Key, dest: cg.Key): boolea
   return true;
 }
 
-export function baseMove(state: HeadlessState, orig: cg.Key, dest: cg.Key): cg.Piece | boolean {
+export function takMove(state: HeadlessState, move: cg.Move): boolean {
+  let res = false;
+  move.drops.forEach( (drop) => {
+    let dest = moveTo(move.orig, move.dir);
+    if (dest && move.index > 0) {
+      res = baseMove(state, move.orig, dest, drop) && res;
+      move.index -= drop;
+    }
+  });
+  return res;
+}
+
+/*
+Test move:
+origPiece = {bellow: [{color: "Black"}], color: "White"}
+destPiece = {color: "Black"}
+state = {pieces: new Map()}
+state.pieces.set("a1", origPiece)
+state.pieces.set("a2", destPiece)
+orig = "a1"
+dest = "a2"
+index = 0
+*/
+
+export function baseMove(state: HeadlessState, orig: cg.Key, dest: cg.Key, index: number = 1): boolean {
   const origPiece = state.pieces.get(orig),
     destPiece = state.pieces.get(dest);
+  index = index - 1; // to correct for index;
   if (orig === dest || !origPiece) return false;
   const captured = destPiece;
   if (dest === state.selected) unselect(state);
   callUserFunction(state.events.move, orig, dest, captured);
   if (!tryAutoCastle(state, orig, dest)) {
-    if (origPiece.bellow && origPiece.bellow.length > 0) {
-      let newTop = origPiece.bellow.shift()!;
-      newTop.bellow = origPiece.bellow.splice(0); // affects the piece that will be place on dest
-      console.log("setting top :");
-      console.log(newTop);
+    if (origPiece.bellow && origPiece.bellow.length-index > 0) {
+      let leftPieces = origPiece.bellow.splice(index, origPiece.bellow.length)
+      let newTop = leftPieces.shift()!;
+      newTop.bellow = leftPieces; // affects the piece that will be place on dest
       state.pieces.set(orig, newTop);
     }
     else {
@@ -124,7 +148,7 @@ export function baseMove(state: HeadlessState, orig: cg.Key, dest: cg.Key): cg.P
   state.lastMove = [orig, dest];
   state.check = undefined;
   callUserFunction(state.events.change);
-  return captured || true;
+  return true;
 }
 
 export function baseNewPiece(state: HeadlessState, piece: cg.Piece, key: cg.Key, force?: boolean): boolean {

@@ -7,7 +7,8 @@ export declare function setPieces(state: HeadlessState, pieces: cg.PiecesDiff): 
 export declare function setCheck(state: HeadlessState, color: cg.Color | boolean): void;
 export declare function unsetPremove(state: HeadlessState): void;
 export declare function unsetPredrop(state: HeadlessState): void;
-export declare function baseMove(state: HeadlessState, orig: cg.Key, dest: cg.Key): cg.Piece | boolean;
+export declare function takMove(state: HeadlessState, move: cg.Move): boolean;
+export declare function baseMove(state: HeadlessState, orig: cg.Key, dest: cg.Key, index?: number): boolean;
 export declare function baseNewPiece(state: HeadlessState, piece: cg.Piece, key: cg.Key, force?: boolean): boolean;
 export declare function userMove(state: HeadlessState, orig: cg.Key, dest: cg.Key): boolean;
 export declare function dropNewPiece(state: HeadlessState, orig: cg.Key, dest: cg.Key, force?: boolean): void;
