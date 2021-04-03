@@ -1,5 +1,5 @@
 import { State } from './state';
-import { key2pos, createEl } from './util';
+import { key2pos, createEl, moveTo } from './util';
 import { whitePov } from './board';
 import * as util from './util';
 import { AnimCurrent, AnimVectors, AnimVector, AnimFadings } from './anim';
@@ -13,6 +13,8 @@ type SquareClasses = Map<cg.Key, string>;
 // ported from https://github.com/veloce/lichobile/blob/master/src/js/chessground/view.js
 // in case of bugs, blame @veloce
 export function render(s: State): void {
+  console.log(s.index);
+
   const asWhite: boolean = whitePov(s),
     posToTranslate = s.dom.relative ? util.posToTranslateRel : util.posToTranslateAbs(s.dom.bounds()),
     translate = s.dom.relative ? util.translateRel : util.translateAbs,
@@ -80,15 +82,16 @@ export function render(s: State): void {
           // same piece: flag as same
           if (elPieceName === pieceNameOf(pieceAtKey) && (!fading || !el.cgFading)) {
             samePieces.add(k);
+            appendValue(movedPieces, elPieceName, el); // Every piece goes here
           }
           // different piece: flag as moved unless it is a fading piece
           else {
             if (fading && elPieceName === pieceNameOf(fading)) {
               el.classList.add('fading');
               el.cgFading = true;
-            } else {
+            } //else {
               appendValue(movedPieces, elPieceName, el);
-            }
+            //}
           }
         }
         else {
@@ -130,7 +133,7 @@ export function render(s: State): void {
   // or append new pieces
   for (const [k, p] of pieces) {
     anim = anims.get(k);
-    if (!samePieces.has(k)) {
+    //if (!samePieces.has(k)) { // now i update every time to show index
       if (p.bellow && p.bellow.length > 0){
         const bellowLength = p.bellow.length;
         const reversed = [...p.bellow].reverse();
@@ -140,6 +143,20 @@ export function render(s: State): void {
           pieceNode.cgPiece = pieceName;
           pieceNode.cgKey = k;
           pieceNode.cgStackIndex = bellowLength - i;
+          if (i == 0) {
+            if(bellowLength - i + 1 <= s.index) {
+              pieceNode.style.transform = `translate(0px,-10px)`;
+            }
+          }
+          else {
+            if(bellowLength - i + 1 == s.index) {
+              pieceNode.style.transform = `translate(5px,-10px)`;
+            }
+            else {
+              pieceNode.style.transform = `translate(5px,-5px)`;
+            }
+          }
+
           return pieceNode;
         })
 
@@ -147,7 +164,6 @@ export function render(s: State): void {
         for (let i = 0; i < pieces.length-1; i++) {
           pieces[i+1].style.width = '100%';
           pieces[i+1].style.height = '100%';
-          pieces[i+1].style.transform = `translate(5px,-5px)`;
           pieces[i].appendChild(pieces[i+1])
         }
 
@@ -159,7 +175,12 @@ export function render(s: State): void {
         topPieceNode.cgStackIndex = 0;
         topPieceNode.style.width = '100%';
         topPieceNode.style.height = '100%';
-        topPieceNode.style.transform = `translate(5px,-5px)`;
+        if (s.index === 1) {
+          topPieceNode.style.transform = `translate(5px,-10px)`;
+        }
+        else {
+          topPieceNode.style.transform = `translate(5px,-5px)`;
+        }
         if (anim) {
           pieces[0].cgAnimating = true;
           pos[0] += anim[2];
@@ -192,11 +213,11 @@ export function render(s: State): void {
         }
         boardEl.appendChild(pieceNode);
       }
-    }
+//    }
   }
 
   // remove any element that remains in the moved sets
-  for (const nodes of movedPieces.values()) removeNodes(s, nodes);
+  for (const nodes of movedPieces.values()) removeNodes(s, nodes); /// TODO: remove all before rendering
   for (const nodes of movedSquares.values()) removeNodes(s, nodes);
 }
 
@@ -256,8 +277,11 @@ function computeSquareClasses(s: State): SquareClasses {
         }
     }
   }
-  const premove = s.premovable.current;
-  if (premove) for (const k of premove) addSquare(squares, k, 'current-premove');
+  if (s.premovable.current) {
+    const premove = s.premovable.current;
+    const drops = [...Array(premove.drops.length).keys()];;
+    for (const n of drops) addSquare(squares, moveTo(premove.orig, premove.dir, n)!, 'current-premove');
+  }
   else if (s.predroppable.current) addSquare(squares, s.predroppable.current.key, 'current-premove');
 
   const o = s.exploding;

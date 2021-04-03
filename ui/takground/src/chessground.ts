@@ -38,6 +38,14 @@ export function Chessground(element: HTMLElement, config?: Config): Api {
       unbind: prevUnbind,
       relative,
     };
+
+    element.onwheel = (e) => {
+      e.preventDefault();
+      state.index = Math.min(Math.max(state.index - 1 * Math.sign(e.deltaY), 1), 8);
+      console.log(state.index);
+      redrawNow();
+    }
+
     state.drawable.prevSvgHash = '';
     redrawNow(false);
     events.bindBoard(state, boundsUpdated);

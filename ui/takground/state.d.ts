@@ -31,7 +31,7 @@ export interface HeadlessState {
         dests?: cg.Dests;
         showDests: boolean;
         events: {
-            after?: (orig: cg.Key, dest: cg.Key, metadata: cg.MoveMetadata) => void;
+            after?: (move: cg.Move, metadata: cg.MoveMetadata) => void;
             afterNewPiece?: (role: cg.Role, key: cg.Key, metadata: cg.MoveMetadata) => void;
         };
         rookCastle: boolean;
@@ -41,7 +41,7 @@ export interface HeadlessState {
         showDests: boolean;
         castle: boolean;
         dests?: cg.Key[];
-        current?: cg.KeyPair;
+        current?: cg.Move;
         events: {
             set?: (orig: cg.Key, dest: cg.Key, metadata?: cg.SetPremoveMetadata) => void;
             unset?: () => void;
@@ -87,6 +87,7 @@ export interface HeadlessState {
     drawable: Drawable;
     exploding?: cg.Exploding;
     hold: cg.Timer;
+    index: number;
 }
 export interface State extends HeadlessState {
     dom: cg.Dom;

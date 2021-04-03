@@ -16,6 +16,7 @@ export declare function selectSquare(state: HeadlessState, key: cg.Key, force?: 
 export declare function setSelected(state: HeadlessState, key: cg.Key): void;
 export declare function unselect(state: HeadlessState): void;
 export declare function canMove(state: HeadlessState, orig: cg.Key, dest: cg.Key): boolean;
+export declare function canTakMove(state: HeadlessState, move: cg.Move): boolean;
 export declare function isDraggable(state: HeadlessState, orig: cg.Key): boolean;
 export declare function playPremove(state: HeadlessState): boolean;
 export declare function playPredrop(state: HeadlessState, validate: (drop: cg.Drop) => boolean): boolean;

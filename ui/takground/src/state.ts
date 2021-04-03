@@ -34,7 +34,7 @@ export interface HeadlessState {
     dests?: cg.Dests; // valid moves. {"a2" ["a3" "a4"] "b1" ["a3" "c3"]}
     showDests: boolean; // whether to add the move-dest class on squares
     events: {
-      after?: (orig: cg.Key, dest: cg.Key, metadata: cg.MoveMetadata) => void; // called after the move has been played
+      after?: (move: cg.Move, metadata: cg.MoveMetadata) => void; //(orig: cg.Key, dest: cg.Key, metadata: cg.MoveMetadata) => void; // called after the move has been played
       afterNewPiece?: (role: cg.Role, key: cg.Key, metadata: cg.MoveMetadata) => void; // called after a new piece is dropped on the board
     };
     rookCastle: boolean; // castle by moving the king to the rook
@@ -44,7 +44,7 @@ export interface HeadlessState {
     showDests: boolean; // whether to add the premove-dest class on squares
     castle: boolean; // whether to allow king castle premoves
     dests?: cg.Key[]; // premove destinations for the current selection
-    current?: cg.KeyPair; // keys of the current saved premove ["e2" "e4"]
+    current?: cg.Move; // keys of the current saved premove { i "e2" ">" drops }
     events: {
       set?: (orig: cg.Key, dest: cg.Key, metadata?: cg.SetPremoveMetadata) => void; // called after the premove has been set
       unset?: () => void; // called after the premove has been unset
@@ -96,6 +96,7 @@ export interface HeadlessState {
   drawable: Drawable;
   exploding?: cg.Exploding;
   hold: cg.Timer;
+  index: number;
 }
 
 export interface State extends HeadlessState {
@@ -186,5 +187,6 @@ export function defaults(): HeadlessState {
       prevSvgHash: '',
     },
     hold: timer(),
+    index: 1
   };
 }

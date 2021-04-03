@@ -1,5 +1,5 @@
 import { HeadlessState } from './state';
-import { pos2key, key2pos, opposite, distanceSq, allPos, computeSquareCenter, moveTo } from './util';
+import { pos2key, key2pos, opposite, distanceSq, allPos, computeSquareCenter, moveTo, keysToDir } from './util';
 import { premove, queen, knight } from './premove';
 import * as cg from './types';
 
@@ -39,7 +39,7 @@ export function setCheck(state: HeadlessState, color: cg.Color | boolean): void 
 
 function setPremove(state: HeadlessState, orig: cg.Key, dest: cg.Key, meta: cg.SetPremoveMetadata): void {
   unsetPredrop(state);
-  state.premovable.current = [orig, dest];
+  state.premovable.current = {index: state.index, orig: orig, dir: keysToDir(orig, dest), drops: [state.index]} as cg.Move;
   callUserFunction(state.premovable.events.set, orig, dest, meta);
 }
 
@@ -167,7 +167,7 @@ export function baseNewPiece(state: HeadlessState, piece: cg.Piece, key: cg.Key,
 }
 
 function baseUserMove(state: HeadlessState, orig: cg.Key, dest: cg.Key): cg.Piece | boolean {
-  const result = baseMove(state, orig, dest);
+  const result = baseMove(state, orig, dest, state.index);
   if (result) {
     state.movable.dests = undefined;
     state.turnColor = opposite(state.turnColor);
@@ -187,8 +187,9 @@ export function userMove(state: HeadlessState, orig: cg.Key, dest: cg.Key): bool
         ctrlKey: state.stats.ctrlKey,
         holdTime,
       };
+      const move = {index: state.index, orig: orig, dir: keysToDir(orig, dest), drops: [state.index]} as cg.Move;
       if (result !== true) metadata.captured = result;
-      callUserFunction(state.movable.events.after, orig, dest, metadata);
+      callUserFunction(state.movable.events.after, move, metadata);
       return true;
     }
   } else if (canPremove(state, orig, dest)) {
@@ -268,6 +269,12 @@ export function canMove(state: HeadlessState, orig: cg.Key, dest: cg.Key): boole
   );
 }
 
+export function canTakMove(state: HeadlessState, move: cg.Move): boolean {
+  const dest = moveTo(move.orig, move.dir);
+  return dest ? canMove(state, move.orig, dest) : false;
+}
+
+
 function canDrop(state: HeadlessState, orig: cg.Key, dest: cg.Key): boolean {
   const piece = state.pieces.get(orig);
   return (
@@ -314,15 +321,13 @@ export function isDraggable(state: HeadlessState, orig: cg.Key): boolean {
 export function playPremove(state: HeadlessState): boolean {
   const move = state.premovable.current;
   if (!move) return false;
-  const orig = move[0],
-    dest = move[1];
   let success = false;
-  if (canMove(state, orig, dest)) {
-    const result = baseUserMove(state, orig, dest);
+  if (canTakMove(state, move)) {
+    const result = baseUserMove(state, move.orig, moveTo(move.orig, move.dir)!);
     if (result) {
       const metadata: cg.MoveMetadata = { premove: true };
       if (result !== true) metadata.captured = result;
-      callUserFunction(state.movable.events.after, orig, dest, metadata);
+      callUserFunction(state.movable.events.after, move, metadata);
       success = true;
     }
   }

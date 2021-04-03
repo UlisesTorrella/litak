@@ -159,15 +159,15 @@ export default class RoundController {
     setTimeout(this.showExpiration, 250);
   };
 
-  private onUserMove = (orig: cg.Key, dest: cg.Key, meta: cg.MoveMetadata) => {
-    if (!this.keyboardMove || !this.keyboardMove.usedSan) ab.move(this, meta);
-    if (!promotion.start(this, orig, dest, meta)) this.sendMove(orig, dest, undefined, meta);
-  };
-  //
-  // private onUserMove = (m: cg.Move, meta: cg.MoveMetadata) => {
+  // private onUserMove = (orig: cg.Key, dest: cg.Key, meta: cg.MoveMetadata) => {
   //   if (!this.keyboardMove || !this.keyboardMove.usedSan) ab.move(this, meta);
-  //   if (!promotion.start(this, orig, dest, meta)) this.sendMove(m, undefined, meta);
+  //   if (!promotion.start(this, orig, dest, meta)) this.sendMove(orig, dest, undefined, meta);
   // };
+  //
+  private onUserMove = (m: cg.Move, meta: cg.MoveMetadata) => {
+    if (!this.keyboardMove || !this.keyboardMove.usedSan) ab.move(this, meta);
+    this.sendMove(m, undefined, meta);
+  };
 
   private onUserNewPiece = (role: cg.Role, key: cg.Key, meta: cg.MoveMetadata) => {
     if (!this.replaying() && crazyValid(this.data, role, key)) {
@@ -308,11 +308,11 @@ export default class RoundController {
     if (fdiff===0) return (rdiff>0) ? '-' as cg.Direction : '+' as cg.Direction;
     else return (fdiff>0) ? '<' as cg.Direction : '>' as cg.Direction;
   }
-//  sendMove = (m: cg.Move, prom: cg.Role | undefined, meta: cg.MoveMetadata) => {
-  sendMove = (orig: cg.Key, dest: cg.Key, prom: cg.Role | undefined, meta: cg.MoveMetadata) => {
+  sendMove = (m: cg.Move, prom: cg.Role | undefined, meta: cg.MoveMetadata) => {
+//  sendMove = (orig: cg.Key, dest: cg.Key, prom: cg.Role | undefined, meta: cg.MoveMetadata) => {
     const move: SocketMove = {
-  //    u: m.index + m.orig + m.dir + m.drops.join(""),
-      u: 1 + orig + this.keysToDir(orig, dest) + "1",
+      u: m.index + m.orig + m.dir + m.drops.join(""),
+  //    u: 1 + orig + this.keysToDir(orig, dest) + "1",
     };
     if (prom) move.u += prom === 'knight' ? 'n' : prom[0];
     if (blur.get()) move.b = 1;
