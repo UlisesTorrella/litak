@@ -24,7 +24,7 @@ sealed trait PieceSetObject {
 
 object PieceSet extends PieceSetObject {
 
-  val default = new PieceSet("cburnett")
+  val default = new PieceSet("shapes")
 
   val all = List(
     default.name,
