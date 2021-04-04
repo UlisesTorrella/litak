@@ -1,13 +1,18 @@
 # Litak (Lichess for tak)
 
-[![Build server](https://github.com/ornicar/lila/workflows/Build%20server/badge.svg)](https://github.com/ornicar/lila/actions?query=workflow%3A%22Build+server%22)
-[![Build assets](https://github.com/ornicar/lila/workflows/Build%20assets/badge.svg)](https://github.com/ornicar/lila/actions?query=workflow%3A%22Build+assets%22)
-[![Crowdin](https://d322cqt584bo4o.cloudfront.net/lichess/localized.svg)](https://crowdin.com/project/lichess)
-[![Twitter](https://img.shields.io/badge/Twitter-%40lichess-blue.svg)](https://twitter.com/lichess)
-
 <img src="./img/gameplay.png" alt="Lichess homepage" title="Lichess comes with light and dark theme, this screenshot shows both." />
 
+# [Tak](https://en.wikipedia.org/wiki/Tak_(game))
 
+***Tak*** is a two-player game seen in the book: The Wise Man's Fear from the Kingkiller Chronicle. The game's objective is to create a path from one side of the board to the other following the: [Rules](https://cheapass.com/wp-content/uploads/2016/07/Tak-Beta-Rules.pdf), or [Video](https://www.youtube.com/watch?v=iEXkpS-Q9dI)
+
+## Adaptation to 2d play:
+
+Using lichess crazyhouse tools, we have the stones to place according to the 8x8 tak rules. 
+
+To select how many stones to move I'm using the scroll wheel rendering the stones to be moved a bit higher (open to debate), this is way heavier than lichess' redering method. 
+
+## Specs:
 
 Litak ([lichess](https://github.com/ornicar/lila) for tak) is a free online tak game server.
 
@@ -25,16 +30,6 @@ Browser testing done with [![Browserstack](https://raw.githubusercontent.com/orn
 Proxy detection done with [IP2Proxy database](https://www.ip2location.com/database/ip2proxy).
 
 See [lichess.org/source](https://lichess.org/source) for a list of repositories.
-
-# [Tak](https://en.wikipedia.org/wiki/Tak_(game))
-
-***Tak*** is a two-player game seen in the book: The Wise Man's Fear from the Kingkiller Chronicle. The game's objective is to create a path from one side of the board to the other following the: [Rules](https://cheapass.com/wp-content/uploads/2016/07/Tak-Beta-Rules.pdf), or [Video](https://www.youtube.com/watch?v=iEXkpS-Q9dI)
-
-## Adaptation to 2d play:
-
-Using lichess crazyhouse tools, we have the stones to place according to the 8x8 tak rules. 
-
-To select how many stones to move I'm using the scroll wheel rendering the stones to be moved a bit higher (open to debate), this is way heavier than lichess' redering method. 
 
 # TODO:
 

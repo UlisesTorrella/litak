@@ -48,7 +48,7 @@ export function makeConfig(ctrl: RoundController): Config {
       },
     },
     animation: {
-      enabled: false,
+      enabled: true,
       duration: data.pref.animationDuration,
     },
     premovable: {
