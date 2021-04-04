@@ -146,6 +146,9 @@ export function baseMove(state: HeadlessState, orig: cg.Key, dest: cg.Key, index
     //state.pieces.delete(orig); TODO: if orig stack is empty delete
   }
   state.lastMove = [orig, dest];
+  if (state.pieces.get(dest) && state.pieces.get(dest)!.bellow && state.pieces.get(dest)!.bellow!.length + 1 > state.maxIndex) {
+    state.maxIndex = state.pieces.get(dest)!.bellow!.length + 1;
+  }
   state.check = undefined;
   callUserFunction(state.events.change);
   return true;

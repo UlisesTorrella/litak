@@ -114,3 +114,28 @@ export const spinner = () =>
       ]),
     ]
   );
+
+
+
+export function moveTo(orig: cg.Key, dir: cg.Direction, n: number = 1): cg.Key | undefined {
+  switch (dir) {
+    case '+':
+      let up = cg.ranks.findIndex( i => i==orig[1]) + n;
+      if (up < cg.ranks.length) return `${orig[0]}${cg.ranks[up]}` as cg.Key;
+      else return undefined;
+    case '-':
+      let down = cg.ranks.findIndex( i => i==orig[1]) - n;
+      if (down >= 0) return `${orig[0]}${cg.ranks[down]}` as cg.Key;
+      else return undefined;
+    case '>':
+      let right = cg.files.findIndex( i => i==orig[0]) + n;
+      if (right < cg.files.length) return `${cg.files[right]}${orig[1]}` as cg.Key;
+      else return undefined;
+    case '<':
+      let left = cg.files.findIndex( i => i==orig[0]) - n;
+      if (left >= 0) return `${cg.files[left]}${orig[1]}` as cg.Key;
+      else return undefined;
+    default:
+      return undefined;
+  }
+}

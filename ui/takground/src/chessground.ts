@@ -41,7 +41,7 @@ export function Chessground(element: HTMLElement, config?: Config): Api {
 
     element.onwheel = (e) => {
       e.preventDefault();
-      state.index = Math.min(Math.max(state.index - 1 * Math.sign(e.deltaY), 1), 8);
+      state.index = Math.min(Math.max(state.index - 1 * Math.sign(e.deltaY), 1), state.maxIndex);
       console.log(state.index);
       redrawNow();
     }

@@ -40,6 +40,8 @@ To select how many stones to move I'm using the scroll wheel rendering the stone
 
 - [ ] Move several squares in one move
 - [ ] Flatten wallstones with capstones
+- [ ] First move with opposite color
+- [ ] Animations
 
 ## Installation
 

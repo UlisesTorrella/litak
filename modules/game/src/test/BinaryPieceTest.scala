@@ -40,7 +40,6 @@ class BinaryPieceTest extends Specification {
   val third = BinaryFormat.piece.write(map3)
   val third_read = BinaryFormat.piece.read(third, Standard)
 
-
   "binary pieces" should {
     "write" should {
       "empty board" in {

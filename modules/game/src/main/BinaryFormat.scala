@@ -14,18 +14,15 @@ object BinaryFormat {
   object pgn {
 
     def write(moves: PgnMoves): ByteArray = {
-      lila.log("ULISES").warn(s"writing $moves")
       ByteArray {
         format.pgn.Binary.writeMoves(moves).get
       }
     }
 
     def read(ba: ByteArray): PgnMoves = {
-      lila.log("ULISES").warn(s"reading $ba")
       format.pgn.Binary.readMoves(ba.value.toList).get.toVector
     }
     def read(ba: ByteArray, nb: Int): PgnMoves = {
-      lila.log("ULISES").warn(s"reading $ba nb $nb")
       format.pgn.Binary.readMoves(ba.value.toList, nb).get.toVector
     }
   }
@@ -284,12 +281,11 @@ object BinaryFormat {
 
       positions.zip(stacksLists.map { bytes =>
         bytes.size match {
-          case 0 => Stack()
+          case 0 => Stack[Piece]()
           case 1 => bytesToStack(bytes)
           case _ => correctStack(bytesToStack(bytes), bytes(0), bytes(1))
         }
       }).toMap
-      Map.empty[Pos, Stack[Piece]]
     }
 
     // cache standard start position

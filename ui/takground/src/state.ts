@@ -97,6 +97,7 @@ export interface HeadlessState {
   exploding?: cg.Exploding;
   hold: cg.Timer;
   index: number;
+  maxIndex: number;
 }
 
 export interface State extends HeadlessState {
@@ -187,6 +188,7 @@ export function defaults(): HeadlessState {
       prevSvgHash: '',
     },
     hold: timer(),
-    index: 1
+    index: 1,
+    maxIndex: 1
   };
 }

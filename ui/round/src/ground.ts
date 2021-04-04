@@ -14,12 +14,13 @@ export function makeConfig(ctrl: RoundController): Config {
   const data = ctrl.data,
     hooks = ctrl.makeCgHooks(),
     step = plyStep(data, ctrl.ply),
-    playing = ctrl.isPlaying();
+    playing = ctrl.isPlaying(),
+    lastMove = util.uci2move(step.uci);
   return {
     fen: step.fen,
     orientation: boardOrientation(data, ctrl.flip),
     turnColor: step.ply % 2 === 0 ? 'white' : 'black',
-    lastMove: util.uci2move(step.uci),
+    lastMove: lastMove ? [lastMove.orig, util.moveTo(lastMove.orig, lastMove.dir)] : [],
     check: !!step.check,
     coordinates: data.pref.coords !== 0,
     addPieceZIndex: ctrl.data.pref.is3d,
