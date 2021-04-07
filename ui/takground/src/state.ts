@@ -98,6 +98,8 @@ export interface HeadlessState {
   hold: cg.Timer;
   index: number;
   maxIndex: number;
+  currIndex: number;
+  buildingMove?: cg.Move;
 }
 
 export interface State extends HeadlessState {
@@ -189,6 +191,7 @@ export function defaults(): HeadlessState {
     },
     hold: timer(),
     index: 1,
-    maxIndex: 1
+    maxIndex: 1,
+    currIndex: 10
   };
 }

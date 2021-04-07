@@ -98,8 +98,9 @@ export function takMove(state: HeadlessState, move: cg.Move): boolean {
   move.drops.forEach( (drop) => {
     let dest = moveTo(move.orig, move.dir);
     if (dest && move.index > 0) {
-      res = baseMove(state, move.orig, dest, drop) && res;
+      res = baseMove(state, move.orig, dest, move.index) && res;
       move.index -= drop;
+      move.orig = dest;
     }
   });
   return res;
@@ -170,12 +171,7 @@ export function baseNewPiece(state: HeadlessState, piece: cg.Piece, key: cg.Key,
 }
 
 function baseUserMove(state: HeadlessState, orig: cg.Key, dest: cg.Key): cg.Piece | boolean {
-  const result = baseMove(state, orig, dest, state.index);
-  if (result) {
-    state.movable.dests = undefined;
-    state.turnColor = opposite(state.turnColor);
-    state.animation.current = undefined;
-  }
+  const result = baseMove(state, orig, dest, state.currIndex);
   return result;
 }
 
@@ -190,9 +186,32 @@ export function userMove(state: HeadlessState, orig: cg.Key, dest: cg.Key): bool
         ctrlKey: state.stats.ctrlKey,
         holdTime,
       };
-      const move = {index: state.index, orig: orig, dir: keysToDir(orig, dest), drops: [state.index]} as cg.Move;
-      if (result !== true) metadata.captured = result;
-      callUserFunction(state.movable.events.after, move, metadata);
+      if (state.currIndex === state.index) {
+        if (result) {
+          state.movable.dests = undefined;
+          state.turnColor = opposite(state.turnColor);
+          state.animation.current = undefined;
+        }
+        const move = state.buildingMove
+          ? {...state.buildingMove, drops: [...state.buildingMove.drops, state.index]}
+          : {index: state.index, orig: orig, dir: keysToDir(orig, dest), drops: [state.index]} as cg.Move;
+        state.currIndex = 10; // turn off
+        if (result !== true) metadata.captured = result;
+        callUserFunction(state.movable.events.after, move, metadata);
+      }
+      else {
+        if (state.buildingMove) {
+          state.buildingMove = {...state.buildingMove, drops: [...state.buildingMove.drops, state.index]};
+          state.currIndex = state.currIndex - state.index;
+        }
+        else {
+          state.buildingMove = {index: state.currIndex, orig: orig, dir: keysToDir(orig, dest), drops: [state.index]} as cg.Move;
+          setSelected(state, dest);
+        }
+        if (moveTo(dest, keysToDir(orig, dest))) {
+          state.movable.dests?.set(dest, [moveTo(dest, keysToDir(orig, dest))!]);
+        }
+      }
       return true;
     }
   } else if (canPremove(state, orig, dest)) {
@@ -242,11 +261,14 @@ export function selectSquare(state: HeadlessState, key: cg.Key, force?: boolean)
   if (isMovable(state, key) || isPremovable(state, key)) {
     setSelected(state, key);
     state.hold.start();
+  } else {
+    state.currIndex = 10; // turn off
   }
 }
 
 export function setSelected(state: HeadlessState, key: cg.Key): void {
   state.selected = key;
+  state.currIndex = state.index;
   if (isPremovable(state, key)) {
     state.premovable.dests = premove(state.pieces, key, state.premovable.castle);
   } else state.premovable.dests = undefined;
