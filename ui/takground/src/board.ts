@@ -194,18 +194,19 @@ export function userMove(state: HeadlessState, orig: cg.Key, dest: cg.Key): bool
         }
         const move = state.buildingMove
           ? {...state.buildingMove, drops: [...state.buildingMove.drops, state.index]}
-          : {index: state.index, orig: orig, dir: keysToDir(orig, dest), drops: [state.index]} as cg.Move;
+          : {index: state.currIndex, orig: orig, dir: keysToDir(orig, dest), drops: [state.index]} as cg.Move;
         state.currIndex = 10; // turn off
+        state.buildingMove = undefined;
         if (result !== true) metadata.captured = result;
         callUserFunction(state.movable.events.after, move, metadata);
       }
       else {
         if (state.buildingMove) {
-          state.buildingMove = {...state.buildingMove, drops: [...state.buildingMove.drops, state.index]};
+          state.buildingMove = {...state.buildingMove, drops: [...state.buildingMove.drops, state.currIndex - state.index]};
           state.currIndex = state.currIndex - state.index;
         }
         else {
-          state.buildingMove = {index: state.currIndex, orig: orig, dir: keysToDir(orig, dest), drops: [state.index]} as cg.Move;
+          state.buildingMove = {index: state.currIndex, orig: orig, dir: keysToDir(orig, dest), drops: [state.currIndex - state.index]} as cg.Move;
           setSelected(state, dest);
         }
         if (moveTo(dest, keysToDir(orig, dest))) {
@@ -268,6 +269,13 @@ export function selectSquare(state: HeadlessState, key: cg.Key, force?: boolean)
 
 export function setSelected(state: HeadlessState, key: cg.Key): void {
   state.selected = key;
+  const piece = state.pieces.get(key);
+  if (piece && piece!.bellow) {
+    state.index = Math.min(state.index, piece.bellow!.length + 1)
+  }
+  else {
+    state.index = 1
+  }
   state.currIndex = state.index;
   if (isPremovable(state, key)) {
     state.premovable.dests = premove(state.pieces, key, state.premovable.castle);

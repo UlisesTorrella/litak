@@ -199,7 +199,7 @@ object BinaryFormat {
             case _ => chess.Direction.Up
           }
           if orig != Pos.A1
-        } yield Uci.Move(orig, dir)
+        } yield Uci.Move(orig, dir, 1, List(1))
       )
   }
 
