@@ -227,9 +227,10 @@ export default class RoundController {
     this.justDropped = undefined;
     this.preDrop = undefined;
     const s = this.stepAt(ply),
+      lastMove = util.uci2move(s.uci),
       config: CgConfig = {
         fen: s.fen,
-        lastMove: util.uci2move(s.uci),
+        lastMove: lastMove ? [lastMove.orig, util.moveTo(lastMove.orig, lastMove.dir)] : [],
         check: !!s.check,
         turnColor: this.ply % 2 === 0 ? 'white' : 'black',
       };

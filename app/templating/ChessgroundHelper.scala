@@ -27,16 +27,16 @@ trait ChessgroundHelper {
             val highlights = ctx.pref.highlight ?? lastMove.distinct.map { pos =>
               s"""<square class="last-move" style="top:${top(pos, 0)}%;left:${left(pos)}%"></square>"""
             } mkString ""
-            val pieces =
-              if (ctx.pref.isBlindfold) ""
-              else
-                board.pieces collect {
-                  case (pos, stack) => { stack.zipWithIndex.foldLeft(""){ case (z, (piece, index)) =>
-                      z ++ s"""<piece class="${piece.color.name} ${piece.role.name}" style="top:${top(pos, index)}%;left:${left(pos)}%">Info</piece>"""
-                    }
-                  }
-                } mkString ""
-            s"$highlights$pieces"
+            // val pieces =
+            //   if (ctx.pref.isBlindfold) ""
+            //   else
+            //     board.pieces collect {
+            //       case (pos, stack) => { stack.zipWithIndex.foldLeft(""){ case (z, (piece, index)) =>
+            //           z ++ s"""<piece class="${piece.color.name} ${piece.role.name}" style="top:${top(pos, index)}%;left:${left(pos)}%"></piece>"""
+            //         }
+            //       }
+            //     } mkString ""
+            s"$highlights"
           }
         }
       }
