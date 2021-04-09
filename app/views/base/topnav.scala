@@ -35,26 +35,16 @@ object topnav {
           )
         )
       ),
-      ctx.noBot option st.section(
-        linkTitle(routes.Puzzle.home.path, trans.puzzles()),
-        div(role := "group")(
-          a(href := routes.Puzzle.home)(trans.puzzles()),
-          a(href := routes.Puzzle.dashboard(30, "home"))(trans.puzzle.puzzleDashboard()),
-          a(href := routes.Storm.home)("Puzzle Storm")
-        )
-      ),
+      // ctx.noBot option st.section(
+      //   linkTitle(routes.Puzzle.home.path, trans.puzzles()),
+      //   div(role := "group")(
+      //     a(href := routes.Puzzle.home)(trans.puzzles()),
+      //     a(href := routes.Puzzle.dashboard(30, "home"))(trans.puzzle.puzzleDashboard()),
+      //     a(href := routes.Storm.home)("Puzzle Storm")
+      //   )
+      // ),
       st.section(
-        linkTitle(routes.Practice.index.path, trans.learnMenu()),
-        div(role := "group")(
-          ctx.noBot option frag(
-            a(href := routes.Learn.index)(trans.chessBasics()),
-            a(href := routes.Practice.index)(trans.practice()),
-            a(href := routes.Coordinate.home)(trans.coordinates.coordinates())
-          ),
-          a(href := routes.Study.allDefault(1))(trans.studyMenu()),
-          ctx.noKid option a(href := routes.Coach.all(1))(trans.coaches()),
-          canSeeClasMenu option a(href := routes.Clas.index)(trans.clas.lichessClasses())
-        )
+        linkTitle("https://www.ultraboardgames.com/tak/game-rules.php#:~:text=Spaces%20on%20the%20Tak%20board,the%20most%20flat%20stones%20wins", "Rules")
       ),
       st.section(
         linkTitle(routes.Tv.index.path, trans.watch()),
@@ -73,16 +63,17 @@ object topnav {
           a(href := routes.Team.home())(trans.team.teams()),
           ctx.noKid option a(href := routes.ForumCateg.index)(trans.forum())
         )
-      ),
-      st.section(
-        linkTitle(routes.UserAnalysis.index.path, trans.tools()),
-        div(role := "group")(
-          a(href := routes.UserAnalysis.index)(trans.analysis()),
-          a(href := s"${routes.UserAnalysis.index}#explorer")(trans.openingExplorer()),
-          a(href := routes.Editor.index)(trans.boardEditor()),
-          a(href := routes.Importer.importGame)(trans.importGame()),
-          a(href := routes.Search.index())(trans.search.advancedSearch())
-        )
       )
+      // ,
+      // st.section(
+      //   linkTitle(routes.UserAnalysis.index.path, trans.tools()),
+      //   div(role := "group")(
+      //     a(href := routes.UserAnalysis.index)(trans.analysis()),
+      //     a(href := s"${routes.UserAnalysis.index}#explorer")(trans.openingExplorer()),
+      //     a(href := routes.Editor.index)(trans.boardEditor()),
+      //     a(href := routes.Importer.importGame)(trans.importGame()),
+      //     a(href := routes.Search.index())(trans.search.advancedSearch())
+      //   )
+      // )
     )
 }

@@ -33,10 +33,10 @@ See [lichess.org/source](https://lichess.org/source) for a list of repositories.
 
 # TODO:
 
-- [ ] Move several squares in one move
+- [x] Move several squares in one move
 - [ ] Flatten wallstones with capstones
 - [ ] First move with opposite color
-- [ ] Animations
+- [x] Animations
 
 ## Installation
 
