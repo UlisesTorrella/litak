@@ -36,7 +36,6 @@ See [lichess.org/source](https://lichess.org/source) for a list of repositories.
 - [x] Move several squares in one move
 - [ ] Flatten wallstones with capstones
 - [ ] First move with opposite color
-- [x] Animations
 
 ## Installation
 
