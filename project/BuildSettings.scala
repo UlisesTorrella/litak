@@ -16,7 +16,7 @@ object BuildSettings {
     Defaults.coreDefaultSettings ++ Seq(
       version := lilaVersion,
       organization := "org.lichess",
-      resolvers += lilaMaven,
+      resolvers ++= Seq(lilaMaven, litakMaven),
       scalaVersion := globalScalaVersion,
       scalacOptions ++= compilerOptions,
       // No bloop project for tests
@@ -31,7 +31,7 @@ object BuildSettings {
   lazy val defaultLibs: Seq[ModuleID] =
     akka.bundle ++ macwire.bundle ++ Seq(
       play.api,
-      //chess,
+      chess,
       scalalib,
       jodaTime,
       autoconfig
