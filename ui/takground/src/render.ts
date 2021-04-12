@@ -186,13 +186,17 @@ export function render(s: State): void {
           pos[0] += anim[2];
           pos[1] += anim[3];
         }
-        translate(pieces[0], posToTranslate(pos, asWhite));
+        translate(pieces[0], posToTranslate(pos, asWhite), (bellowLength + 1 <= s.index))
         if (s.addPieceZIndex) {
           pieces[0].style.zIndex = posZIndex(pos, asWhite);
         }
 
         pieces[pieces.length-1].appendChild(topPieceNode);
         boardEl.appendChild(pieces[0]);
+
+        if (p.bellow!.length + 1 > s.maxIndex) {
+          s.maxIndex = p.bellow!.length + 1;
+        }
       }
       else {
         const pieceName = pieceNameOf(p),
