@@ -34,8 +34,9 @@ See [lichess.org/source](https://lichess.org/source) for a list of repositories.
 # TODO:
 
 - [x] Move several squares in one move
-- [ ] Flatten wallstones with capstones
+- [x] Flatten wallstones with capstones
 - [ ] First move with opposite color
+- [ ] Learn page, to explain how to move stacks and flatten stones
 
 ## Installation
 
