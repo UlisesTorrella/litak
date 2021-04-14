@@ -295,9 +295,16 @@ function isMovable(state: HeadlessState, orig: cg.Key): boolean {
 }
 
 export function canMove(state: HeadlessState, orig: cg.Key, dest: cg.Key): boolean {
-  return (
-    orig !== dest && isMovable(state, orig) && (state.movable.free || !!state.movable.dests?.get(orig)?.includes(dest))
-  );
+  if (state.pieces.get(dest) &&
+      state.pieces.get(dest)!.role == "wallstone") {
+    return orig !== dest && isMovable(state, orig) && (state.movable.free || !!state.movable.dests?.get(orig)?.includes(dest))
+           && state.pieces.get(orig)?.role == "capstone" && state.currIndex == 1;
+  }
+  else {
+    return (
+      orig !== dest && isMovable(state, orig) && (state.movable.free || !!state.movable.dests?.get(orig)?.includes(dest))
+    );
+  }
 }
 
 export function canTakMove(state: HeadlessState, move: cg.Move): boolean {
