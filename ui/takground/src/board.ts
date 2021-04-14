@@ -138,6 +138,7 @@ export function baseMove(state: HeadlessState, orig: cg.Key, dest: cg.Key, index
     }
     if (destPiece) {
       let piece = origPiece;
+      destPiece.role = 'flatstone' as cg.Role; // nothing but a flatstone can be stepped on
       piece.bellow = (piece.bellow ?? []).concat([destPiece].concat(destPiece.bellow ?? []))
       state.pieces.set(dest, piece);
     }
