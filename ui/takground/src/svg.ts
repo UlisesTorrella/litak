@@ -142,7 +142,7 @@ function customSvgHash(s: string): Hash {
   // Rolling hash with base 31 (cf. https://stackoverflow.com/questions/7616461/generate-a-hash-from-string-in-javascript)
   let h = 0;
   for (let i = 0; i < s.length; i++) {
-    h = (((h << 5) - h) + s.charCodeAt(i)) >>> 0;
+    h = ((h << 5) - h + s.charCodeAt(i)) >>> 0;
   }
   return 'custom-' + h.toString();
 }
@@ -156,10 +156,9 @@ function renderShape(
 ): SVGElement {
   let el: SVGElement;
   if (shape.customSvg) {
-    const orig = orient(key2pos(shape.orig), state.orientation)
+    const orig = orient(key2pos(shape.orig), state.orientation);
     el = renderCustomSvg(shape.customSvg, orig, bounds);
-  }
-  else if (shape.piece)
+  } else if (shape.piece)
     el = renderPiece(
       state.drawable.pieces.baseUrl,
       orient(key2pos(shape.orig), state.orientation),
@@ -249,7 +248,8 @@ function renderArrow(
   });
 }
 
-function renderPiece(baseUrl: string, pos: cg.Pos, piece: DrawShapePiece, bounds: ClientRect): SVGElement { // TODO Show stacked
+function renderPiece(baseUrl: string, pos: cg.Pos, piece: DrawShapePiece, bounds: ClientRect): SVGElement {
+  // TODO Show stacked
   const o = pos2px(pos, bounds),
     size = (bounds.width / 8) * (piece.scale || 1),
     name = piece.color[0] + (piece.role === 'knight' ? 'n' : piece.role[0]).toUpperCase();

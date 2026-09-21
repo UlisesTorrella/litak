@@ -56,10 +56,10 @@ export interface Exploding {
 }
 
 export interface Move {
-  index: number,
-  orig: Key,
-  dir: Direction,
-  drops: number[]
+  index: number;
+  orig: Key;
+  dir: Direction;
+  drops: number[];
 }
 
 export interface MoveMetadata {

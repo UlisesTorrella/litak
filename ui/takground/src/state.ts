@@ -192,6 +192,6 @@ export function defaults(): HeadlessState {
     hold: timer(),
     index: 1,
     maxIndex: 1,
-    currIndex: 10
+    currIndex: 10,
   };
 }

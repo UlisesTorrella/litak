@@ -18,6 +18,8 @@ ui/game/**/*.js
 ui/game/**/*.d.ts
 ui/nvui/**/*.js
 ui/nvui/**/*.d.ts
+ui/takground/**/*.js
+ui/takground/**/*.d.ts
 
 *.min.js
 

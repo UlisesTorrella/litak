@@ -39,7 +39,12 @@ export function setCheck(state: HeadlessState, color: cg.Color | boolean): void 
 
 function setPremove(state: HeadlessState, orig: cg.Key, dest: cg.Key, meta: cg.SetPremoveMetadata): void {
   unsetPredrop(state);
-  state.premovable.current = {index: state.index, orig: orig, dir: keysToDir(orig, dest), drops: [state.index]} as cg.Move;
+  state.premovable.current = {
+    index: state.index,
+    orig: orig,
+    dir: keysToDir(orig, dest),
+    drops: [state.index],
+  } as cg.Move;
   callUserFunction(state.premovable.events.set, orig, dest, meta);
 }
 
@@ -95,7 +100,7 @@ function tryAutoCastle(state: HeadlessState, orig: cg.Key, dest: cg.Key): boolea
 
 export function takMove(state: HeadlessState, move: cg.Move): boolean {
   let res = false;
-  move.drops.forEach( (drop) => {
+  move.drops.forEach(drop => {
     let dest = moveTo(move.orig, move.dir);
     if (dest && move.index > 0) {
       res = baseMove(state, move.orig, dest, move.index) && res;
@@ -127,22 +132,20 @@ export function baseMove(state: HeadlessState, orig: cg.Key, dest: cg.Key, index
   if (dest === state.selected) unselect(state);
   callUserFunction(state.events.move, orig, dest, captured);
   if (!tryAutoCastle(state, orig, dest)) {
-    if (origPiece.bellow && origPiece.bellow.length-index > 0) {
-      let leftPieces = origPiece.bellow.splice(index, origPiece.bellow.length)
+    if (origPiece.bellow && origPiece.bellow.length - index > 0) {
+      let leftPieces = origPiece.bellow.splice(index, origPiece.bellow.length);
       let newTop = leftPieces.shift()!;
       newTop.bellow = leftPieces; // affects the piece that will be place on dest
       state.pieces.set(orig, newTop);
-    }
-    else {
+    } else {
       state.pieces.delete(orig);
     }
     if (destPiece) {
       let piece = origPiece;
       destPiece.role = 'flatstone' as cg.Role; // nothing but a flatstone can be stepped on
-      piece.bellow = (piece.bellow ?? []).concat([destPiece].concat(destPiece.bellow ?? []))
+      piece.bellow = (piece.bellow ?? []).concat([destPiece].concat(destPiece.bellow ?? []));
       state.pieces.set(dest, piece);
-    }
-    else {
+    } else {
       state.pieces.set(dest, origPiece);
     }
     //state.pieces.delete(orig); TODO: if orig stack is empty delete
@@ -191,20 +194,26 @@ export function userMove(state: HeadlessState, orig: cg.Key, dest: cg.Key): bool
           state.animation.current = undefined;
         }
         const move = state.buildingMove
-          ? {...state.buildingMove, drops: [...state.buildingMove.drops, state.index]}
-          : {index: state.currIndex, orig: orig, dir: keysToDir(orig, dest), drops: [state.index]} as cg.Move;
+          ? { ...state.buildingMove, drops: [...state.buildingMove.drops, state.index] }
+          : ({ index: state.currIndex, orig: orig, dir: keysToDir(orig, dest), drops: [state.index] } as cg.Move);
         state.currIndex = 10; // turn off
         state.buildingMove = undefined;
         if (result !== true) metadata.captured = result;
         callUserFunction(state.movable.events.after, move, metadata);
-      }
-      else {
+      } else {
         if (state.buildingMove) {
-          state.buildingMove = {...state.buildingMove, drops: [...state.buildingMove.drops, state.currIndex - state.index]};
+          state.buildingMove = {
+            ...state.buildingMove,
+            drops: [...state.buildingMove.drops, state.currIndex - state.index],
+          };
           state.currIndex = state.currIndex - state.index;
-        }
-        else {
-          state.buildingMove = {index: state.currIndex, orig: orig, dir: keysToDir(orig, dest), drops: [state.currIndex - state.index]} as cg.Move;
+        } else {
+          state.buildingMove = {
+            index: state.currIndex,
+            orig: orig,
+            dir: keysToDir(orig, dest),
+            drops: [state.currIndex - state.index],
+          } as cg.Move;
           setSelected(state, dest);
         }
         if (moveTo(dest, keysToDir(orig, dest))) {
@@ -269,10 +278,9 @@ export function setSelected(state: HeadlessState, key: cg.Key): void {
   state.selected = key;
   const piece = state.pieces.get(key);
   if (piece && piece!.bellow) {
-    state.index = Math.min(state.index, piece.bellow!.length + 1)
-  }
-  else {
-    state.index = 1
+    state.index = Math.min(state.index, piece.bellow!.length + 1);
+  } else {
+    state.index = 1;
   }
   state.currIndex = state.index;
   if (isPremovable(state, key)) {
@@ -295,14 +303,19 @@ function isMovable(state: HeadlessState, orig: cg.Key): boolean {
 }
 
 export function canMove(state: HeadlessState, orig: cg.Key, dest: cg.Key): boolean {
-  if (state.pieces.get(dest) &&
-      state.pieces.get(dest)!.role == "wallstone") {
-    return orig !== dest && isMovable(state, orig) && (state.movable.free || !!state.movable.dests?.get(orig)?.includes(dest))
-           && state.pieces.get(orig)?.role == "capstone" && state.currIndex == 1;
-  }
-  else {
+  if (state.pieces.get(dest) && state.pieces.get(dest)!.role == 'wallstone') {
     return (
-      orig !== dest && isMovable(state, orig) && (state.movable.free || !!state.movable.dests?.get(orig)?.includes(dest))
+      orig !== dest &&
+      isMovable(state, orig) &&
+      (state.movable.free || !!state.movable.dests?.get(orig)?.includes(dest)) &&
+      state.pieces.get(orig)?.role == 'capstone' &&
+      state.currIndex == 1
+    );
+  } else {
+    return (
+      orig !== dest &&
+      isMovable(state, orig) &&
+      (state.movable.free || !!state.movable.dests?.get(orig)?.includes(dest))
     );
   }
 }
@@ -311,7 +324,6 @@ export function canTakMove(state: HeadlessState, move: cg.Move): boolean {
   const dest = moveTo(move.orig, move.dir);
   return dest ? canMove(state, move.orig, dest) : false;
 }
-
 
 function canDrop(state: HeadlessState, orig: cg.Key, dest: cg.Key): boolean {
   const piece = state.pieces.get(orig);

@@ -94,13 +94,13 @@ Back up the `mongo_production_data`, `redis_production_data`, and `caddy_data` v
 
 The production configuration is tuned for a small community with roughly a dozen concurrent games:
 
-| Service | Container limit | Internal memory ceiling |
-| --- | ---: | ---: |
-| Litak | 1536 MB | 1 GB JVM heap |
-| `litak-ws` | 512 MB | 384 MB JVM heap |
-| MongoDB | 768 MB | 256 MB WiredTiger cache |
-| Redis | 256 MB | 128 MB dataset |
-| Caddy | 128 MB | — |
+| Service    | Container limit | Internal memory ceiling |
+| ---------- | --------------: | ----------------------: |
+| Litak      |         1536 MB |           1 GB JVM heap |
+| `litak-ws` |          512 MB |         384 MB JVM heap |
+| MongoDB    |          768 MB | 256 MB WiredTiger cache |
+| Redis      |          256 MB |          128 MB dataset |
+| Caddy      |          128 MB |                       — |
 
 The limits total 3.2 GB, leaving operating-system and Docker headroom on a 4 GB server. Application caches populate according to real usage, so their source-code capacities do not reserve all that memory up front.
 

@@ -205,9 +205,12 @@ function removeDragElements(s: State): void {
 function pieceElementByKey(s: State, key: cg.Key): cg.PieceNode | undefined {
   let el = s.dom.elements.board.firstChild;
   while (el) {
-    if ((el as cg.KeyedNode).cgKey === key
-        && (el as cg.KeyedNode).tagName === 'PIECE'
-        && (el as cg.PieceNode).cgStackIndex === 0 ) return el as cg.PieceNode; // TODO search for user input index
+    if (
+      (el as cg.KeyedNode).cgKey === key &&
+      (el as cg.KeyedNode).tagName === 'PIECE' &&
+      (el as cg.PieceNode).cgStackIndex === 0
+    )
+      return el as cg.PieceNode; // TODO search for user input index
     el = el.nextSibling;
   }
   return;

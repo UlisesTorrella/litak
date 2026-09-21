@@ -78,7 +78,7 @@ function variant2option(key: Rules, name: string, ctrl: EditorCtrl): VNode {
 
 const allVariants: Array<[Rules, string]> = [
   ['standard', 'Standard'],
-  ['crazyhouse', 'Crazyhouse']
+  ['crazyhouse', 'Crazyhouse'],
 ];
 
 function controls(ctrl: EditorCtrl, state: EditorState): VNode {
@@ -352,9 +352,11 @@ let lastTouchMovePos: NumberPair | undefined;
 function sparePieces(ctrl: EditorCtrl, color: Color, _orientation: Color, position: 'top' | 'bottom'): VNode {
   const selectedClass = selectedToClass(ctrl.selected());
 
-  const pieces = ['king', 'queen', 'rook', 'bishop', 'knight', 'pawn', 'flatstone', 'capstone', 'wallstone'].map(function (role) {
-    return [color, role];
-  });
+  const pieces = ['king', 'queen', 'rook', 'bishop', 'knight', 'pawn', 'flatstone', 'capstone', 'wallstone'].map(
+    function (role) {
+      return [color, role];
+    }
+  );
 
   return h(
     'div',

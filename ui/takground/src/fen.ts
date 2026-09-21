@@ -12,7 +12,7 @@ const roles: { [letter: string]: cg.Role } = {
   k: 'king',
   f: 'flatstone',
   c: 'capstone',
-  w: 'wallstone'
+  w: 'wallstone',
 };
 
 const letters = {
@@ -24,14 +24,14 @@ const letters = {
   king: 'k',
   wallstone: 'w',
   capstone: 'c',
-  flatstone: 'f'
+  flatstone: 'f',
 };
 
 export function read(fen: cg.FEN): cg.Pieces {
   if (fen === 'start') fen = initial;
   const pieces: cg.Pieces = new Map();
   let row = 7,
-      col = 0;
+    col = 0;
   let stack: Array<cg.Piece> = [];
   for (const c of fen) {
     switch (c) {
@@ -46,14 +46,12 @@ export function read(fen: cg.FEN): cg.Pieces {
         const nb = c.charCodeAt(0);
         if (nb == 40) {
           stack = [];
-        }
-        else if (nb == 41) {
+        } else if (nb == 41) {
           let piece = stack[0];
           piece.bellow = stack.splice(1);
           pieces.set(pos2key([col, row]), piece); // TODO: handle stacks
           ++col;
-        }
-        else if (nb < 57) col += nb - 48;
+        } else if (nb < 57) col += nb - 48;
         else {
           const role = c.toLowerCase();
           stack.push({

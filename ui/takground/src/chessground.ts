@@ -39,12 +39,12 @@ export function Chessground(element: HTMLElement, config?: Config): Api {
       relative,
     };
 
-    element.onwheel = (e) => {
+    element.onwheel = e => {
       e.preventDefault();
       state.index = Math.min(Math.max(state.index - 1 * Math.sign(e.deltaY), 1), state.maxIndex, state.currIndex);
       console.log(state.index);
       redrawNow();
-    }
+    };
 
     state.drawable.prevSvgHash = '';
     redrawNow(false);

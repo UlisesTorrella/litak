@@ -90,11 +90,10 @@ export function render(s: State): void {
               el.classList.add('fading');
               el.cgFading = true;
             } //else {
-              appendValue(movedPieces, elPieceName, el);
+            appendValue(movedPieces, elPieceName, el);
             //}
           }
-        }
-        else {
+        } else {
           appendValue(movedPieces, elPieceName, el);
         }
       }
@@ -134,90 +133,86 @@ export function render(s: State): void {
   for (const [k, p] of pieces) {
     anim = anims.get(k);
     //if (!samePieces.has(k)) { // now i update every time to show index
-      if (p.bellow && p.bellow.length > 0){
-        const bellowLength = p.bellow.length;
-        const reversed = [...p.bellow].reverse();
-        const pieces = reversed.map( (p, i) => {
-          const pieceName = pieceNameOf(p),
-            pieceNode = createEl('piece', pieceName) as cg.PieceNode;
-          pieceNode.cgPiece = pieceName;
-          pieceNode.cgKey = k;
-          pieceNode.cgStackIndex = bellowLength - i;
-          if (i == 0) {
-            if(bellowLength - i + 1 <= s.index) {
-              pieceNode.style.transform = `translate(0px,-10px)`;
-            }
-          }
-          else {
-            if(bellowLength - i + 1 == s.index) {
-              pieceNode.style.transform = `translate(5px,-10px)`;
-            }
-            else {
-              pieceNode.style.transform = `translate(5px,-5px)`;
-            }
-          }
-
-          return pieceNode;
-        })
-
-        console.log(pieces);
-        for (let i = 0; i < pieces.length-1; i++) {
-          pieces[i+1].style.width = '100%';
-          pieces[i+1].style.height = '100%';
-          pieces[i].appendChild(pieces[i+1])
-        }
-
-        const topPieceName = pieceNameOf(p),
-          topPieceNode = createEl('piece', topPieceName) as cg.PieceNode,
-          pos = key2pos(k);
-        topPieceNode.cgPiece = topPieceName;
-        topPieceNode.cgKey = k;
-        topPieceNode.cgStackIndex = 0;
-        topPieceNode.style.width = '100%';
-        topPieceNode.style.height = '100%';
-        if (s.index === 1) {
-          topPieceNode.style.transform = `translate(5px,-10px)`;
-        }
-        else {
-          topPieceNode.style.transform = `translate(5px,-5px)`;
-        }
-        if (anim) {
-          pieces[0].cgAnimating = true;
-          pos[0] += anim[2];
-          pos[1] += anim[3];
-        }
-        translate(pieces[0], posToTranslate(pos, asWhite), (bellowLength + 1 <= s.index))
-        if (s.addPieceZIndex) {
-          pieces[0].style.zIndex = posZIndex(pos, asWhite);
-        }
-
-        pieces[pieces.length-1].appendChild(topPieceNode);
-        boardEl.appendChild(pieces[0]);
-
-        if (p.bellow!.length + 1 > s.maxIndex) {
-          s.maxIndex = p.bellow!.length + 1;
-        }
-      }
-      else {
+    if (p.bellow && p.bellow.length > 0) {
+      const bellowLength = p.bellow.length;
+      const reversed = [...p.bellow].reverse();
+      const pieces = reversed.map((p, i) => {
         const pieceName = pieceNameOf(p),
-          pieceNode = createEl('piece', pieceName) as cg.PieceNode,
-          pos = key2pos(k);
-
+          pieceNode = createEl('piece', pieceName) as cg.PieceNode;
         pieceNode.cgPiece = pieceName;
         pieceNode.cgKey = k;
-        pieceNode.cgStackIndex = 0;
-        if (anim) {
-          pieceNode.cgAnimating = true;
-          pos[0] += anim[2];
-          pos[1] += anim[3];
+        pieceNode.cgStackIndex = bellowLength - i;
+        if (i == 0) {
+          if (bellowLength - i + 1 <= s.index) {
+            pieceNode.style.transform = `translate(0px,-10px)`;
+          }
+        } else {
+          if (bellowLength - i + 1 == s.index) {
+            pieceNode.style.transform = `translate(5px,-10px)`;
+          } else {
+            pieceNode.style.transform = `translate(5px,-5px)`;
+          }
         }
-        translate(pieceNode, posToTranslate(pos, asWhite));
-        if (s.addPieceZIndex) {
-          pieceNode.style.zIndex = posZIndex(pos, asWhite);
-        }
-        boardEl.appendChild(pieceNode);
+
+        return pieceNode;
+      });
+
+      console.log(pieces);
+      for (let i = 0; i < pieces.length - 1; i++) {
+        pieces[i + 1].style.width = '100%';
+        pieces[i + 1].style.height = '100%';
+        pieces[i].appendChild(pieces[i + 1]);
       }
-//    }
+
+      const topPieceName = pieceNameOf(p),
+        topPieceNode = createEl('piece', topPieceName) as cg.PieceNode,
+        pos = key2pos(k);
+      topPieceNode.cgPiece = topPieceName;
+      topPieceNode.cgKey = k;
+      topPieceNode.cgStackIndex = 0;
+      topPieceNode.style.width = '100%';
+      topPieceNode.style.height = '100%';
+      if (s.index === 1) {
+        topPieceNode.style.transform = `translate(5px,-10px)`;
+      } else {
+        topPieceNode.style.transform = `translate(5px,-5px)`;
+      }
+      if (anim) {
+        pieces[0].cgAnimating = true;
+        pos[0] += anim[2];
+        pos[1] += anim[3];
+      }
+      translate(pieces[0], posToTranslate(pos, asWhite), bellowLength + 1 <= s.index);
+      if (s.addPieceZIndex) {
+        pieces[0].style.zIndex = posZIndex(pos, asWhite);
+      }
+
+      pieces[pieces.length - 1].appendChild(topPieceNode);
+      boardEl.appendChild(pieces[0]);
+
+      if (p.bellow!.length + 1 > s.maxIndex) {
+        s.maxIndex = p.bellow!.length + 1;
+      }
+    } else {
+      const pieceName = pieceNameOf(p),
+        pieceNode = createEl('piece', pieceName) as cg.PieceNode,
+        pos = key2pos(k);
+
+      pieceNode.cgPiece = pieceName;
+      pieceNode.cgKey = k;
+      pieceNode.cgStackIndex = 0;
+      if (anim) {
+        pieceNode.cgAnimating = true;
+        pos[0] += anim[2];
+        pos[1] += anim[3];
+      }
+      translate(pieceNode, posToTranslate(pos, asWhite));
+      if (s.addPieceZIndex) {
+        pieceNode.style.zIndex = posZIndex(pos, asWhite);
+      }
+      boardEl.appendChild(pieceNode);
+    }
+    //    }
   }
 
   // remove any element that remains in the moved sets
@@ -283,10 +278,9 @@ function computeSquareClasses(s: State): SquareClasses {
   }
   if (s.premovable.current) {
     const premove = s.premovable.current;
-    const drops = [...Array(premove.drops.length).keys()];;
+    const drops = [...Array(premove.drops.length).keys()];
     for (const n of drops) addSquare(squares, moveTo(premove.orig, premove.dir, n)!, 'current-premove');
-  }
-  else if (s.predroppable.current) addSquare(squares, s.predroppable.current.key, 'current-premove');
+  } else if (s.predroppable.current) addSquare(squares, s.predroppable.current.key, 'current-premove');
 
   const o = s.exploding;
   if (o) for (const k of o.keys) addSquare(squares, k, 'exploding' + o.stage);

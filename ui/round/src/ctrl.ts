@@ -302,18 +302,18 @@ export default class RoundController {
     this.redraw();
   };
 
-// parcially here until I do everything on takground
+  // parcially here until I do everything on takground
   keysToDir = (orig: cg.Key, dest: cg.Key) => {
     const fdiff = orig.charCodeAt(0) - dest.charCodeAt(0);
     const rdiff = orig.charCodeAt(1) - dest.charCodeAt(1);
-    if (fdiff===0) return (rdiff>0) ? '-' as cg.Direction : '+' as cg.Direction;
-    else return (fdiff>0) ? '<' as cg.Direction : '>' as cg.Direction;
-  }
+    if (fdiff === 0) return rdiff > 0 ? ('-' as cg.Direction) : ('+' as cg.Direction);
+    else return fdiff > 0 ? ('<' as cg.Direction) : ('>' as cg.Direction);
+  };
   sendMove = (m: cg.Move, prom: cg.Role | undefined, meta: cg.MoveMetadata) => {
-//  sendMove = (orig: cg.Key, dest: cg.Key, prom: cg.Role | undefined, meta: cg.MoveMetadata) => {
+    //  sendMove = (orig: cg.Key, dest: cg.Key, prom: cg.Role | undefined, meta: cg.MoveMetadata) => {
     const move: SocketMove = {
-      u: m.index + m.orig + m.dir + m.drops.join(""),
-  //    u: 1 + orig + this.keysToDir(orig, dest) + "1",
+      u: m.index + m.orig + m.dir + m.drops.join(''),
+      //    u: 1 + orig + this.keysToDir(orig, dest) + "1",
     };
     if (prom) move.u += prom === 'knight' ? 'n' : prom[0];
     if (blur.get()) move.b = 1;

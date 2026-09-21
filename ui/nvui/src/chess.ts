@@ -36,8 +36,28 @@ const anna: { [letter: string]: string } = {
   g: 'gustav',
   h: 'hector',
 };
-const roles: { [letter: string]: string } = { P: 'pawn', R: 'rook', N: 'knight', B: 'bishop', Q: 'queen', K: 'king', F: 'flatstone', W: 'wallstone', C: 'capstone' };
-const letters = { pawn: 'p', rook: 'r', knight: 'n', bishop: 'b', queen: 'q', king: 'k', capstone: 'c', flatstone: 'f', wallstone: 'w' };
+const roles: { [letter: string]: string } = {
+  P: 'pawn',
+  R: 'rook',
+  N: 'knight',
+  B: 'bishop',
+  Q: 'queen',
+  K: 'king',
+  F: 'flatstone',
+  W: 'wallstone',
+  C: 'capstone',
+};
+const letters = {
+  pawn: 'p',
+  rook: 'r',
+  knight: 'n',
+  bishop: 'b',
+  queen: 'q',
+  king: 'k',
+  capstone: 'c',
+  flatstone: 'f',
+  wallstone: 'w',
+};
 
 const letterPiece: { [letter: string]: string } = {
   p: 'p',
@@ -57,7 +77,7 @@ const letterPiece: { [letter: string]: string } = {
   K: 'k',
   F: 'f',
   C: 'c',
-  W: 'w'
+  W: 'w',
 };
 const whiteUpperLetterPiece: { [letter: string]: string } = {
   p: 'p',
@@ -77,7 +97,7 @@ const whiteUpperLetterPiece: { [letter: string]: string } = {
   K: 'K',
   F: 'F',
   C: 'C',
-  W: 'W'
+  W: 'W',
 };
 const namePiece: { [letter: string]: string } = {
   p: 'pawn',
@@ -97,7 +117,7 @@ const namePiece: { [letter: string]: string } = {
   K: 'king',
   F: 'flatstone',
   C: 'capstone',
-  W: 'wallstone'
+  W: 'wallstone',
 };
 const whiteUpperNamePiece: { [letter: string]: string } = {
   p: 'pawn',
@@ -117,7 +137,7 @@ const whiteUpperNamePiece: { [letter: string]: string } = {
   K: 'King',
   F: 'Flatstone',
   C: 'Capstone',
-  W: 'Wallstone'
+  W: 'Wallstone',
 };
 const skipToFile: { [letter: string]: string } = {
   '!': 'a',

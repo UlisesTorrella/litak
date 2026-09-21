@@ -2,15 +2,15 @@
 
 <img src="./img/gameplay.png" alt="Lichess homepage" title="Lichess comes with light and dark theme, this screenshot shows both." />
 
-# [Tak](https://en.wikipedia.org/wiki/Tak_(game))
+# [Tak](<https://en.wikipedia.org/wiki/Tak_(game)>)
 
-***Tak*** is a two-player game seen in the book: The Wise Man's Fear from the Kingkiller Chronicle. The game's objective is to create a path from one side of the board to the other following the: [Rules](https://cheapass.com/wp-content/uploads/2016/07/Tak-Beta-Rules.pdf), or [Video](https://www.youtube.com/watch?v=iEXkpS-Q9dI)
+**_Tak_** is a two-player game seen in the book: The Wise Man's Fear from the Kingkiller Chronicle. The game's objective is to create a path from one side of the board to the other following the: [Rules](https://cheapass.com/wp-content/uploads/2016/07/Tak-Beta-Rules.pdf), or [Video](https://www.youtube.com/watch?v=iEXkpS-Q9dI)
 
 ## Adaptation to 2d play:
 
-Using lichess crazyhouse tools, we have the stones to place according to the 8x8 tak rules. 
+Using lichess crazyhouse tools, we have the stones to place according to the 8x8 tak rules.
 
-To select how many stones to move I'm using the scroll wheel rendering the stones to be moved a bit higher (open to debate), this is way heavier than lichess' redering method. 
+To select how many stones to move I'm using the scroll wheel rendering the stones to be moved a bit higher (open to debate), this is way heavier than lichess' redering method.
 
 ## Specs:
 

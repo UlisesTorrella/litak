@@ -13,7 +13,7 @@ services:
     volumes:
       - mongo_data:/data/db
     healthcheck:
-      test: ["CMD", "mongo", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      test: ['CMD', 'mongo', '--quiet', '--eval', "db.adminCommand('ping').ok"]
       interval: 3s
       timeout: 3s
       retries: 30
@@ -24,7 +24,7 @@ services:
     volumes:
       - redis_data:/data
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: ['CMD', 'redis-cli', 'ping']
       interval: 3s
       timeout: 3s
       retries: 30
@@ -32,11 +32,11 @@ services:
   assets:
     <<: *litak-image
     working_dir: /workspace/litak
-    command: ["bash", "-lc", "yarn install --frozen-lockfile && ./ui/build dev"]
+    command: ['bash', '-lc', 'yarn install --frozen-lockfile && ./ui/build dev']
     volumes:
       - ../:/workspace/litak
       - litak_node_modules:/workspace/litak/node_modules
-    restart: "no"
+    restart: 'no'
 
   litak-ws:
     <<: *litak-image
@@ -52,7 +52,7 @@ services:
         -Dcsrf.origin=http://localhost:9663
         run
     ports:
-      - "9664:9664"
+      - '9664:9664'
     volumes:
       - ../../litak-ws:/workspace/litak-ws
       - ws_sbt_cache:/root/.sbt
@@ -80,7 +80,7 @@ services:
         -Dredis.uri=redis://redis:6379
         run
     ports:
-      - "9663:9663"
+      - '9663:9663'
     volumes:
       - ../:/workspace/litak
       - litak_node_modules:/workspace/litak/node_modules
@@ -108,4 +108,3 @@ volumes:
   ws_sbt_cache:
   ws_ivy_cache:
   ws_coursier_cache:
-
