@@ -32,8 +32,8 @@ jobs:
   openjdk14:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/cache@v2
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
         with:
           path: |
             ~/.sbt
@@ -48,7 +48,7 @@ jobs:
       - run: cd target/universal/stage && tar -cvpJf ../../../lila-3.0.tar.xz . && cd -
         env:
           XZ_OPT: '-0'
-      - uses: actions/upload-artifact@v1
+      - uses: actions/upload-artifact@v4
         with:
           name: lila-server
           path: lila-3.0.tar.xz

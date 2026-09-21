@@ -27,7 +27,7 @@ COPY litak/ ./
 COPY --from=assets /src/litak/public/ ./public/
 RUN cp -n conf/application.conf.default conf/application.conf \
     && cp -n .sbtopts.default .sbtopts \
-    && ./lila -Depoll=false "test;stage"
+    && ./lila -Depoll=false stage
 
 FROM eclipse-temurin:11-jre-focal AS runtime
 RUN groupadd --system litak \
