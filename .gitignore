@@ -37,6 +37,7 @@ hs_*.log
 yarn-error.log
 
 RUNNING_PID
+docker/.env.production
 
 # Eclipse auto-generated files
 /modules/*/.classpath

@@ -1,0 +1,111 @@
+name: litak-local
+
+x-litak-image: &litak-image
+  build:
+    context: ../..
+    dockerfile: litak/docker/dev.Dockerfile
+  image: litak-dev:local
+
+services:
+  mongo:
+    image: mongo:5.0.33-focal
+    restart: unless-stopped
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongo", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+
+  redis:
+    image: redis:8.2-alpine
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+
+  assets:
+    <<: *litak-image
+    working_dir: /workspace/litak
+    command: ["bash", "-lc", "yarn install --frozen-lockfile && ./ui/build dev"]
+    volumes:
+      - ../:/workspace/litak
+      - litak_node_modules:/workspace/litak/node_modules
+    restart: "no"
+
+  litak-ws:
+    <<: *litak-image
+    working_dir: /workspace/litak-ws
+    command:
+      - bash
+      - -lc
+      - >-
+        sbt
+        -Dmongo.uri=mongodb://mongo:27017/lichess
+        -Dstudy.mongo.uri=mongodb://mongo:27017/lichess
+        -Dredis.uri=redis://redis:6379
+        -Dcsrf.origin=http://localhost:9663
+        run
+    ports:
+      - "9664:9664"
+    volumes:
+      - ../../litak-ws:/workspace/litak-ws
+      - ws_sbt_cache:/root/.sbt
+      - ws_ivy_cache:/root/.ivy2
+      - ws_coursier_cache:/root/.cache/coursier
+    depends_on:
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  litak:
+    <<: *litak-image
+    working_dir: /workspace/litak
+    command:
+      - bash
+      - -lc
+      - >-
+        test -f conf/application.conf || cp conf/application.conf.default conf/application.conf;
+        test -f .sbtopts || cp .sbtopts.default .sbtopts;
+        sbt
+        -Dreactivemongo.api.bson.document.strict=false
+        -Dmongodb.uri=mongodb://mongo:27017
+        -Dredis.uri=redis://redis:6379
+        run
+    ports:
+      - "9663:9663"
+    volumes:
+      - ../:/workspace/litak
+      - litak_node_modules:/workspace/litak/node_modules
+      - litak_sbt_cache:/root/.sbt
+      - litak_ivy_cache:/root/.ivy2
+      - litak_coursier_cache:/root/.cache/coursier
+    depends_on:
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      assets:
+        condition: service_completed_successfully
+      litak-ws:
+        condition: service_started
+    restart: unless-stopped
+
+volumes:
+  mongo_data:
+  redis_data:
+  litak_node_modules:
+  litak_sbt_cache:
+  litak_ivy_cache:
+  litak_coursier_cache:
+  ws_sbt_cache:
+  ws_ivy_cache:
+  ws_coursier_cache:
+

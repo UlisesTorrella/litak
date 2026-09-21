@@ -1,0 +1,12 @@
+{
+  email {$ACME_EMAIL}
+}
+
+{$LITAK_SITE_ADDRESS} {
+  encode zstd gzip
+  reverse_proxy litak:9663
+}
+
+{$LITAK_WS_ADDRESS} {
+  reverse_proxy litak-ws:9664
+}

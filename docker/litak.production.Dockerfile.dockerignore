@@ -1,0 +1,9 @@
+.git
+**/.git
+**/node_modules
+**/target
+**/.bloop
+**/.metals
+**/.idea
+**/.vscode
+

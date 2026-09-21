@@ -1,0 +1,11 @@
+.git
+**/.git
+**/node_modules
+**/target
+**/.bloop
+**/.metals
+**/.idea
+**/.vscode
+litak/public/compiled
+litak/public/css/*.dev.css
+litak/public/css/*.min.css
