@@ -5,6 +5,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 COPY litak/package.json litak/yarn.lock ./
 COPY litak/ui ./ui
+COPY litak/public ./public
 RUN git init && yarn install --frozen-lockfile && ./ui/build prod
 
 FROM eclipse-temurin:11-jdk-focal AS builder
