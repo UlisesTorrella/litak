@@ -4,6 +4,8 @@ import { rollupProject } from '@build/rollupProject';
 import copy from 'rollup-plugin-copy';
 import replace from '@rollup/plugin-replace';
 
+const buildRevision = process.env.LITAK_GIT_REVISION;
+
 export default rollupProject({
   main: {
     input: 'src/site.ts',
@@ -75,8 +77,12 @@ export default rollupProject({
       replace({
         __info__: JSON.stringify({
           date: new Date(new Date().toUTCString()).toISOString().split('.')[0] + '+00:00',
-          commit: execSync('git rev-parse -q --short HEAD', { encoding: 'utf-8' }).trim(),
-          message: execSync('git log -1 --pretty=%s', { encoding: 'utf-8' }).trim(),
+          commit: buildRevision
+            ? buildRevision.slice(0, 7)
+            : execSync('git rev-parse -q --short HEAD', { encoding: 'utf-8' }).trim(),
+          message: buildRevision
+            ? 'Production container build'
+            : execSync('git log -1 --pretty=%s', { encoding: 'utf-8' }).trim(),
         }),
       }),
     ],

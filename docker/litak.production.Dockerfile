@@ -1,4 +1,6 @@
 FROM node:22-bookworm AS assets
+ARG GIT_REVISION=unknown
+ENV LITAK_GIT_REVISION=${GIT_REVISION}
 WORKDIR /src/litak
 RUN apt-get update \
     && apt-get install -y --no-install-recommends git \

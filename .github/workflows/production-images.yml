@@ -68,6 +68,8 @@ jobs:
           context: .
           file: litak/docker/litak.production.Dockerfile
           platforms: linux/amd64
+          build-args: |
+            GIT_REVISION=${{ github.sha }}
           push: true
           tags: ${{ steps.litak-meta.outputs.tags }}
           labels: ${{ steps.litak-meta.outputs.labels }}
