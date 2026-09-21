@@ -1,4 +1,4 @@
-FROM node:18-bullseye AS assets
+FROM node:22-bookworm AS assets
 WORKDIR /src/litak
 RUN apt-get update \
     && apt-get install -y --no-install-recommends git \
