@@ -76,6 +76,8 @@ services:
     mem_limit: 1536m
     env_file: .env.production
     expose: ['9663']
+    volumes:
+      - ./litak-production.conf:/etc/litak/production.conf:ro
     networks: [backend]
     depends_on:
       mongo:
