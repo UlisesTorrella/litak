@@ -35,6 +35,7 @@ RUN groupadd --system litak \
     && mkdir -p /opt/litak /var/log/lichess \
     && chown -R litak:litak /opt/litak /var/log/lichess
 COPY --from=builder --chown=litak:litak /src/litak/target/universal/stage/ /opt/litak/
+COPY --from=builder --chown=litak:litak /src/litak/public/ /opt/litak/public/
 COPY --chown=litak:litak litak/docker/litak-production.conf /etc/litak/production.conf
 USER litak
 WORKDIR /opt/litak
